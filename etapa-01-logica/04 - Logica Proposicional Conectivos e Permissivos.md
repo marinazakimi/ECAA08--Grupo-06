@@ -1,4 +1,4 @@
-# Aula 04: Lógica Proposicional — Conectivos e Blocos de Permissivos
+# Lógica Proposicional — Conectivos e Blocos de Permissivos
 
 ## 1. Fundamentos Matemáticos: Conectivos Lógicos
 
