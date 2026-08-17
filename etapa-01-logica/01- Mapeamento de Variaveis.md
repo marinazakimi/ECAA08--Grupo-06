@@ -1,6 +1,6 @@
 ## Variáveis do Processo
 
-![Sistema Aplicado a Drone Agrícola](marinazakimi/ECAA08--Grupo-06/etapa-01-logica/Diagrama_Variaveis.png)
+![Sistema Aplicado a Drone Agrícola](/marinazakimi/ECAA08--Grupo-06/etapa-01-logica/Diagrama_Variaveis.png)
 
 ### Variáveis de Entrada (Sensores)
 
