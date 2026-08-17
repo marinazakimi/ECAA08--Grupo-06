@@ -1,5 +1,7 @@
 ## Variáveis do Processo
 
+![Sistema Aplicado a Drone Agrícola](marinazakimi/ECAA08--Grupo-06/etapa-01-logica/Diagrama_Variaveis.png)
+
 ### Variáveis de Entrada (Sensores)
 
 | Variável | Sensor | Grandeza / Unidade |
@@ -22,3 +24,4 @@
 | Abertura dos bicos | Válvulas solenoides | Abre/fecha por seção |
 | Controle de altitude | Motores/ESCs | Ajuste de empuxo |
 | Controle de rota | Sistema de navegação | Ajuste de trajetória |
+
