@@ -1,20 +1,20 @@
-Indústria escolhida: Agricultura de Precisão – Pulverização Agrícola
-Insumos: Materiais e recursos consumidos no processo
+# Indústria escolhida: Agricultura de Precisão – Pulverização Agrícola
+## Insumos: Materiais e recursos consumidos no processo
 
-1. Líquido de aplicação
+### 1. Líquido de aplicação
 
-Água: principal veículo utilizado para diluição e preparo da mistura de aplicação.
+  Água: principal veículo utilizado para diluição e preparo da mistura de aplicação.
 Defensivos agrícolas: produtos utilizados no controle de pragas, doenças e plantas daninhas, conforme a finalidade da aplicação.
 Adjuvantes: produtos adicionados à mistura para melhorar características como espalhamento, aderência e eficiência da aplicação.
 Mistura de aplicação: solução preparada na estação de solo e posteriormente transferida para o reservatório do drone.
 
-2. Energia e recursos de operação
+### 2. Energia e recursos de operação
 
 Energia elétrica: utilizada pela estação de solo para alimentação do PLC, sensores, bomba de mistura, válvulas e demais equipamentos.
 Energia da bateria: recurso consumido pelo drone durante o voo, acionamento dos motores/ESCs, sistema de controle, sensores, comunicação e bomba de pulverização.
 Energia para bombeamento: utilizada para pressurizar e transportar o líquido desde o reservatório até os bicos de pulverização.
 
-3. Materiais de processo
+### 3. Materiais de processo
 
 Água de lavagem: utilizada na limpeza do tanque de mistura, reservatório do drone, tubulações e componentes do sistema após a operação.
 Elementos filtrantes: utilizados para impedir a passagem de partículas que possam causar obstrução da bomba, tubulações ou bicos de pulverização.
