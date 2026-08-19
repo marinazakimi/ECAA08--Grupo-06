@@ -144,3 +144,59 @@ Entre os elementos recomendados estão:
 - Alarmes ativos relacionados à pulverização.
 
 Com essas informações, o operador poderá acompanhar o percurso da calda desde sua disponibilidade na estação de solo até sua aplicação na lavoura, permitindo maior controle operacional, rastreabilidade e identificação de condições anormais.
+
+
+# Materiais e Insumos Consumidos no Projeto
+
+**Indústria escolhida:** Agricultura de Precisão – Pulverização Agrícola
+
+## 1. Insumos do Processo de Pulverização
+
+| Categoria | Insumo | Descrição | Utilização |
+|---|---|---|---|
+| Líquido de aplicação | Água | Principal veículo da mistura | Diluição e preparo do líquido de aplicação |
+| Produto químico | Defensivos agrícolas | Produtos utilizados no controle de pragas e doenças | Componente ativo da mistura pulverizada |
+| Produto químico | Adjuvantes | Produtos que melhoram as características da aplicação | Aumentam a aderência e o espalhamento |
+| Mistura | Líquido de aplicação | Mistura preparada na Estação de Solo | Abastecimento do reservatório do drone |
+| Limpeza | Água de lavagem | Utilizada após a operação | Limpeza do tanque, reservatório e tubulações |
+
+## 2. Recursos Energéticos
+
+| Categoria | Recurso | Utilização |
+|---|---|---|
+| Energia | Energia elétrica | Alimentação do PLC, sensores, bomba e válvulas da Estação de Solo |
+| Energia | Bateria do drone | Alimentação dos motores, ESP32, sensores, GPS e bomba |
+| Energia | Energia para bombeamento | Transporte e pressurização do líquido até os bicos |
+
+## 3. Materiais de Processo e Manutenção
+
+| Categoria | Material | Utilização |
+|---|---|---|
+| Filtragem | Elementos filtrantes | Retenção de partículas e proteção contra obstruções |
+| Manutenção | Lubrificantes | Manutenção dos componentes mecânicos |
+| Limpeza | Materiais de limpeza | Higienização da Estação de Solo e do drone |
+
+## 4. Recursos do Sistema SCADA
+
+| Categoria | Recurso | Utilização |
+|---|---|---|
+| Automação | Dados de telemetria | Monitoramento das condições de operação |
+| Comunicação | Comunicação sem fio (Wi-Fi/RF) | Transmissão de dados entre drone, estação e SCADA |
+| Armazenamento | Dados históricos | Data logging, tendências e relatórios |
+| Processamento | Dados dos sensores | Cálculo de permissivos, alarmes e intertravamentos |
+
+## 5. Principais Variáveis Monitoradas
+
+| Recurso/Processo | Tag | Variável |
+|---|---|---|
+| Tanque da Estação de Solo | `EST_LT_01` | Nível do tanque de mistura |
+| Condição ambiental | `EST_WT_01` | Velocidade do vento |
+| Condição ambiental | `EST_TT_01` | Temperatura ambiente |
+| Reservatório do drone | `DRN_LT_01` | Nível de líquido |
+| Sistema de pulverização | `DRN_PT_01` | Pressão da linha |
+| Sistema de pulverização | `DRN_FT_01` | Vazão de aplicação |
+| Sistema elétrico | `DRN_ET_01` | Estado da bateria |
+| Navegação | `DRN_GPS_01` | Latitude, longitude e velocidade |
+| Navegação | `DRN_ZT_01` | Altitude relativa |
+
+> **Observação:** Os sensores fornecem os dados necessários para que o sistema SCADA monitore o processo, registre as condições de operação, gere alarmes e execute os intertravamentos de segurança.
