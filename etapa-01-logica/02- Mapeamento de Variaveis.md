@@ -71,46 +71,46 @@ $$p[k] = \mathcal{H}(y[k], \gamma_{low}, \gamma_{high}, p[k-1]) = \begin{cases} 
 
 #### Vetor de Proposições Atômicas do AgroDrone:
 Definem-se as variáveis booleanas elementares no instante $k$:
-* $P_{EST\_OK}[k] \iff \text{EST\_LT\_01}[k] \ge 20.0\%$ (Nível suficiente no tanque da estação de solo).
-* $P_{DRN\_LOW}[k] \iff \text{DRN\_LT\_01}[k] \le 10.0\%$ (Nível baixo no reservatório do drone).
-* $P_{DRN\_EMPTY}[k] \iff \text{DRN\_LT\_01}[k] \le 3.0\%$ (Reservatório em nível crítico/vazio).
-* $P_{PRESS\_HIGH}[k] \iff \text{DRN\_PT\_01}[k] \ge 4.5\text{ bar}$ (Sobrepressão hidráulica na linha).
-* $P_{PRESS\_LOW}[k] \iff \text{DRN\_PT\_01}[k] \le 1.2\text{ bar}$ (Pressão insuficiente para nebulização).
-* $P_{FLOW\_LOW}[k] \iff \text{DRN\_FT\_01}[k] \le 0.4\text{ L/min}$ (Subvazão na tubulação).
-* $P_{FLOW\_HIGH}[k] \iff \text{DRN\_FT\_01}[k] \ge 3.0\text{ L/min}$ (Sobrevazão / fluxo livre).
-* $P_{PUMP\_ON}[k] \iff \text{DRN\_PMP\_01}[k] > 5.0\%$ (Comando de bomba ativado).
+* $P_{\text{EST\_OK}}[k] \iff \text{EST\_LT\_01}[k] \ge 20.0\%$ (Nível suficiente no tanque da estação de solo).
+* $P_{\text{DRN\_LOW}}[k] \iff \text{DRN\_LT\_01}[k] \le 10.0\%$ (Nível baixo no reservatório do drone).
+* $P_{\text{DRN\_EMPTY}}[k] \iff \text{DRN\_LT\_01}[k] \le 3.0\%$ (Reservatório em nível crítico/vazio).
+* $P_{\text{PRESS\_HIGH}}[k] \iff \text{DRN\_PT\_01}[k] \ge 4.5\text{ bar}$ (Sobrepressão hidráulica na linha).
+* $P_{\text{PRESS\_LOW}}[k] \iff \text{DRN\_PT\_01}[k] \le 1.2\text{ bar}$ (Pressão insuficiente para nebulização).
+* $P_{\text{FLOW\_LOW}}[k] \iff \text{DRN\_FT\_01}[k] \le 0.4\text{ L/min}$ (Subvazão na tubulação).
+* $P_{\text{FLOW\_HIGH}}[k] \iff \text{DRN\_FT\_01}[k] \ge 3.0\text{ L/min}$ (Sobrevazão / fluxo livre).
+* $P_{\text{PUMP\_ON}}[k] \iff \text{DRN\_PMP\_01}[k] > 5.0\%$ (Comando de bomba ativado).
 
 #### Equações Booleanas de Diagnóstico e Intertravamento:
-1. **Alarme de Obstrução de Bicos ($Alarm_{obstr}$):**
-   $$Alarm_{obstr}[k] = P_{PUMP\_ON}[k] \land P_{PRESS\_HIGH}[k] \land P_{FLOW\_LOW}[k]$$
-2. **Alarme de Ruptura de Mangueira / Vazamento Catastrófico ($Alarm_{rupt}$):**
-   $$Alarm_{rupt}[k] = P_{PUMP\_ON}[k] \land P_{PRESS\_LOW}[k] \land P_{FLOW\_HIGH}[k]$$
-3. **Alarme de Risco de Cavitação da Bomba ($Alarm_{cavit}$):**
-   $$Alarm_{cavit}[k] = P_{PUMP\_ON}[k] \land P_{DRN\_EMPTY}[k]$$
-4. **Permissivo de Pulverização Segura ($Perm_{spray}$):**
-   $$Perm_{spray}[k] = \neg P_{DRN\_EMPTY}[k] \land \neg Alarm_{obstr}[k] \land \neg Alarm_{rupt}[k]$$
-5. **Permissivo de Abastecimento da Estação de Solo ($Perm_{abast}$):**
-   $$Perm_{abast}[k] = P_{EST\_OK}[k] \land \neg (\text{DRN\_LT\_01}[k] \ge 95.0\%) \land \neg \text{EST\_PMP\_FALHA}[k]$$
+1. **Alarme de Obstrução de Bicos ($Alarm_{\text{obstr}}$):**
+   $$Alarm_{\text{obstr}}[k] = P_{\text{PUMP\_ON}}[k] \land P_{\text{PRESS\_HIGH}}[k] \land P_{\text{FLOW\_LOW}}[k]$$
+2. **Alarme de Ruptura de Mangueira / Vazamento Catastrófico ($Alarm_{\text{rupt}}$):**
+   $$Alarm_{\text{rupt}}[k] = P_{\text{PUMP\_ON}}[k] \land P_{\text{PRESS\_LOW}}[k] \land P_{\text{FLOW\_HIGH}}[k]$$
+3. **Alarme de Risco de Cavitação da Bomba ($Alarm_{\text{cavit}}$):**
+   $$Alarm_{\text{cavit}}[k] = P_{\text{PUMP\_ON}}[k] \land P_{\text{DRN\_EMPTY}}[k]$$
+4. **Permissivo de Pulverização Segura ($Perm_{\text{spray}}$):**
+   $$Perm_{\text{spray}}[k] = \neg P_{\text{DRN\_EMPTY}}[k] \land \neg Alarm_{\text{obstr}}[k] \land \neg Alarm_{\text{rupt}}[k]$$
+5. **Permissivo de Abastecimento da Estação de Solo ($Perm_{\text{abast}}$):**
+   $$Perm_{\text{abast}}[k] = P_{\text{EST\_OK}}[k] \land \neg (\text{DRN\_LT\_01}[k] \ge 95.0\%) \land \neg \text{EST\_PMP\_FALHA}[k]$$
 
 #### Exemplo Numérico Manual Passo a Passo:
 Considere a seguinte telemetria registrada no passo $k=42$:
 * Nível do Tanque do Drone: $\text{DRN\_LT\_01}[42] = 18.5\%$
 * Pressão da Linha: $\text{DRN\_PT\_01}[42] = 5.2\text{ bar}$
 * Vazão de Aplicação: $\text{DRN\_FT\_01}[42] = 0.25\text{ L/min}$
-* Potência da Bomba: $\text{DRN\_PMP\_01}[42] = 65\%$ ($P_{PUMP\_ON} = 1$)
+* Potência da Bomba: $\text{DRN\_PMP\_01}[42] = 65\%$ ($P_{\text{PUMP\_ON}} = 1$)
 * Velocidade de Voo: $v_g[42] = 4.0\text{ m/s}$, Faixa $w = 3.0\text{ m}$
 
 **Resolução:**
 1. Mapeamento proposicional:
-   * $P_{PRESS\_HIGH} = \mathcal{I}(5.2 \ge 4.5) = 1$
-   * $P_{FLOW\_LOW} = \mathcal{I}(0.25 \le 0.4) = 1$
-   * $P_{DRN\_EMPTY} = \mathcal{I}(18.5 \le 3.0) = 0$
+   * $P_{\text{PRESS\_HIGH}} = \mathcal{I}(5.2 \ge 4.5) = 1$
+   * $P_{\text{FLOW\_LOW}} = \mathcal{I}(0.25 \le 0.4) = 1$
+   * $P_{\text{DRN\_EMPTY}} = \mathcal{I}(18.5 \le 3.0) = 0$
 2. Avaliação da Obstrução:
-   $$Alarm_{obstr}[42] = 1 \land 1 \land 1 = 1 \quad (\text{Ativado})$$
+   $$Alarm_{\text{obstr}}[42] = 1 \land 1 \land 1 = 1 \quad (\text{Ativado})$$
 3. Avaliação da Ruptura:
-   $$Alarm_{rupt}[42] = 1 \land \mathcal{I}(5.2 \le 1.2) \land \mathcal{I}(0.25 \ge 3.0) = 1 \land 0 \land 0 = 0 \quad (\text{Desativado})$$
+   $$Alarm_{\text{rupt}}[42] = 1 \land \mathcal{I}(5.2 \le 1.2) \land \mathcal{I}(0.25 \ge 3.0) = 1 \land 0 \land 0 = 0 \quad (\text{Desativado})$$
 4. Avaliação do Permissivo:
-   $$Perm_{spray}[42] = \neg(0) \land \neg(1) \land \neg(0) = 1 \land 0 \land 1 = 0 \quad (\text{Bloqueia Imediatamente a Bomba})$$
+   $$Perm_{\text{spray}}[42] = \neg(0) \land \neg(1) \land \neg(0) = 1 \land 0 \land 1 = 0 \quad (\text{Bloqueia Imediatamente a Bomba})$$
 5. Dosagem calculada caso estivesse desobstruído com vazão nominal $Q=1.2\text{ L/min}$:
    $$D = \frac{600 \cdot 1.2}{4.0 \cdot 3.0} = \frac{720}{12} = 60.0\text{ L/ha}$$
 
