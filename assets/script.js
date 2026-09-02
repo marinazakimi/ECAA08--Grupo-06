@@ -239,3 +239,156 @@ document.addEventListener('DOMContentLoaded', () => {
   pushLog('SCADA-Core inicializado. Varredura contínua ativa.');
   recompute(true);
 });
+
+/* ============ DECK DE SLIDES (Apresentação) ============ */
+(function () {
+  const slidesData = [
+    {
+      kicker: "Abertura",
+      title: "Lógica formal para um drone que decide quando não pulverizar",
+      body: `<p>Sistema SCADA para um drone agrícola de pulverização: estação de solo + unidade embarcada, com intertravamento provado por lógica proposicional.</p>
+             <ul>
+               <li><b>Planta:</b> drone agrícola de pulverização + estação de solo</li>
+               <li><b>Equipe:</b> Arthur, Caique, Luis Felipe, Marina</li>
+               <li><b>Módulo:</b> 01 — Lógica Formal &amp; Sistemas Especialistas</li>
+             </ul>`
+    },
+    {
+      kicker: "O projeto",
+      title: "Duas frentes, um mesmo intertravamento",
+      body: `<p>Estação de solo (preparo e abastecimento) e unidade embarcada (pulverização em voo) precisam ser enxergadas ao mesmo tempo pelo SCADA.</p>
+             <ul>
+               <li><b>Monitorar</b> nível, vazão, pressão, bateria, altitude e posição de voo</li>
+               <li><b>Bloquear</b> decolagem e pulverização diante de risco</li>
+               <li><b>Diagnosticar</b> causa raiz (bico entupido, mangueira rompida, cavitação)</li>
+               <li><b>Registrar</b> histórico para rastreabilidade agronômica</li>
+             </ul>`
+    },
+    {
+      kicker: "Arquitetura",
+      title: "Campo → Aquisição → Servidor SCADA → HMI",
+      body: `<p>Sensores e atuadores em campo (solo + drone) alimentam um RTU embarcado, que transmite telemetria para o servidor SCADA — responsável pelo intertravamento, motor de diagnóstico e histórico — exibido na HMI do operador.</p>`
+    },
+    {
+      kicker: "Aula 02 · Representação simbólica",
+      title: "Do sensor 4–20 mA à proposição booleana",
+      body: `<p>Cada grandeza contínua vira uma proposição <code>p ∈ {0,1}</code> por histerese, evitando <em>chattering</em> perto do limiar (norma ISA 5.1).</p>
+             <ul>
+               <li><b>DRN_LT_01</b> — nível de calda: crítico &lt; 5%</li>
+               <li><b>DRN_PT_01</b> — pressão de pulverização: alta &gt; 5 bar</li>
+               <li><b>DRN_ET_01</b> — bateria: crítica &lt; 10%</li>
+               <li><b>EST_WT_01</b> — vento: alto &gt; 8 m/s</li>
+             </ul>`
+    },
+    {
+      kicker: "Aula 03 · Tautologias e contradições",
+      title: "Provando que o estado de perigo é impossível",
+      body: `<div class="log-box" style="max-height:none; font-size:0.82rem; line-height:1.8;">
+               <div>Φ = (e₁ ∧ m₁) ∧ (e₁ → ¬m₁)</div>
+               <div>Φ = (e₁ ∧ m₁) ∧ (¬e₁ ∨ ¬m₁)</div>
+               <div>Φ = (F ∧ m₁) ∨ (e₁ ∧ F)</div>
+               <div>Φ = F</div>
+             </div>
+             <p>Como Φ ≡ F, a garantia de segurança ¬Φ ≡ V é uma <b>tautologia invariante</b> — não uma coincidência de teste.</p>`
+    },
+    {
+      kicker: "Aulas 04 e 06 · Permissivos e quantificadores",
+      title: "De um conectivo a qualquer número de setores",
+      body: `<div class="log-box" style="max-height:none; font-size:0.82rem; line-height:1.9;">
+               <div>P_takeoff ≡ gps_ok ∧ ¬bat_low ∧ ¬wind_high ∧ ¬e_stop ∧ (Auto ⊕ Manual)</div>
+               <div>∃s ∈ S, Obstruído(s) — existe algum setor obstruído</div>
+               <div>∀s ∈ S, ¬Obstruído(s) — a barra inteira está íntegra</div>
+             </div>
+             <p>A Aula 05 minimiza essas expressões (Quine–McCluskey) para caber em menos de um ciclo de scan, mesmo acima de 400 Hz.</p>`
+    },
+    {
+      kicker: "Laboratório virtual",
+      title: "Simulador do motor SCADA integrado",
+      body: `<p>Mais abaixo, mexa na telemetria ou dispare um dos sete cenários da Aula 10 e veja em tempo real: fatos derivados, permissivos, diagnósticos ativos e o comando final da bomba.</p>
+             <p><a href="#simulador" class="btn btn-ghost">Ir para o simulador ↓</a></p>`
+    },
+    {
+      kicker: "Aulas 07–08 · Sistema especialista",
+      title: "Base de regras SE...ENTÃO",
+      body: `<ul>
+               <li><b>R3</b> — bomba ligada ∧ vazão baixa ∧ pressão alta → possível obstrução</li>
+               <li><b>R6</b> — bateria crítica → interromper missão</li>
+               <li><b>R7</b> — vento alto → suspender pulverização</li>
+               <li><b>R8</b> — bomba ligada ∧ pressão baixa ∧ vazão baixa → vazamento ou falha de bomba</li>
+             </ul>
+             <p>Avaliadas por <b style="color:var(--ink)">forward chaining</b> a cada novo dado de sensor.</p>`
+    },
+    {
+      kicker: "Aula 09 · Motor de inferência",
+      title: "Forward chaining vs. backward chaining",
+      body: `<p><b style="color:var(--ink)">Forward chaining</b> parte dos fatos dos sensores e encadeia regras até não haver mais conclusão nova — roda a cada scan no simulador.</p>
+             <p><b style="color:var(--ink)">Backward chaining</b> parte de uma hipótese (“há risco de obstrução?”) e verifica recursivamente os fatos que a sustentam — útil em auditoria pós-voo.</p>`
+    },
+    {
+      kicker: "Conclusão",
+      title: "Etapa 01 concluída",
+      body: `<p>O drone agrícola já possui uma camada de segurança formal determinística, com intertravamento provado por tautologia e diagnóstico por sistema especialista.</p>
+             <p><a href="https://github.com/marinazakimi/ECAA08--Grupo-06" target="_blank" rel="noopener" class="btn btn-primary">Repositório no GitHub ↗</a></p>`
+    }
+  ];
+
+  const track = document.getElementById("deckTrack");
+  const dotsWrap = document.getElementById("deckDots");
+  const counterEl = document.getElementById("slideCurrent");
+  const totalEl = document.getElementById("slideTotal");
+  const prevBtn = document.getElementById("prevSlide");
+  const nextBtn = document.getElementById("nextSlide");
+  const deckEl = document.getElementById("deck");
+
+  if (!track) return; // seção não presente nesta página
+
+  let current = 0;
+
+  track.innerHTML = slidesData.map((s, i) => `
+    <div class="slide" data-index="${i}">
+      <span class="kicker">${s.kicker}</span>
+      <h3>${s.title}</h3>
+      ${s.body}
+    </div>
+  `).join("");
+
+  dotsWrap.innerHTML = slidesData.map((_, i) =>
+    `<button data-index="${i}" aria-label="Ir para o slide ${i + 1}"></button>`
+  ).join("");
+
+  totalEl.textContent = slidesData.length;
+  const dots = [...dotsWrap.querySelectorAll("button")];
+
+  function render() {
+    track.style.transform = `translateX(-${current * 100}%)`;
+    counterEl.textContent = current + 1;
+    dots.forEach((d, i) => d.classList.toggle("active", i === current));
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === slidesData.length - 1;
+  }
+
+  function goTo(i) {
+    current = Math.max(0, Math.min(slidesData.length - 1, i));
+    render();
+  }
+
+  prevBtn.addEventListener("click", () => goTo(current - 1));
+  nextBtn.addEventListener("click", () => goTo(current + 1));
+  dots.forEach((d) => d.addEventListener("click", () => goTo(Number(d.dataset.index))));
+
+  // Setas do teclado só quando o deck está visível na tela
+  let deckVisible = false;
+  const observer = new IntersectionObserver(
+    (entries) => { deckVisible = entries[0].isIntersecting; },
+    { threshold: 0.4 }
+  );
+  observer.observe(deckEl);
+
+  document.addEventListener("keydown", (e) => {
+    if (!deckVisible) return;
+    if (e.key === "ArrowRight") goTo(current + 1);
+    if (e.key === "ArrowLeft") goTo(current - 1);
+  });
+
+  render();
+})();
