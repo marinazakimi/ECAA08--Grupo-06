@@ -427,3 +427,75 @@ footer p{ font-size: 0.82rem; color: var(--muted-dim); margin: 0; }
 
 /* misc */
 .badge-row{ display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+
+/* ============ DECK DE SLIDES ============ */
+.deck{
+  border:1px solid var(--border);
+  border-radius:6px;
+  background:var(--panel);
+  overflow:hidden;
+}
+.deck-topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:12px 18px;
+  border-bottom:1px solid var(--border);
+  background:var(--panel-2);
+  font-family:"IBM Plex Mono", monospace;
+  font-size:0.78rem;
+  color:var(--muted);
+}
+.deck-title{ color:var(--ink); font-weight:600; letter-spacing:0.02em; }
+.deck-counter{ color:var(--crop-dim); }
+
+.deck-viewport{ overflow:hidden; }
+.deck-track{
+  display:flex;
+  transition:transform .35s ease;
+}
+.slide{
+  flex:0 0 100%;
+  box-sizing:border-box;
+  padding:36px clamp(20px,4vw,56px);
+  min-height:360px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:14px;
+}
+.slide .kicker{ display:block; margin-bottom:2px; }
+.slide h3{
+  font-size:clamp(1.2rem,2.4vw,1.7rem);
+  color:var(--ink);
+  line-height:1.25;
+}
+.slide p{ color:var(--muted); font-size:0.95rem; line-height:1.6; max-width:64ch; }
+.slide ul{ margin:4px 0 0; padding-left:1.1em; color:var(--muted); font-size:0.92rem; line-height:1.7; }
+.slide ul li b{ color:var(--ink); }
+.slide .log-box{ margin-top:6px; }
+.slide .proof-steps{ font-size:0.85rem; }
+
+.deck-controls{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:14px 18px;
+  border-top:1px solid var(--border);
+  background:var(--panel-2);
+}
+.deck-dots{ display:flex; gap:6px; flex-wrap:wrap; justify-content:center; }
+.deck-dots button{
+  width:8px; height:8px; border-radius:50%;
+  border:1px solid var(--border);
+  background:transparent;
+  padding:0; cursor:pointer;
+}
+.deck-dots button.active{ background:var(--crop); border-color:var(--crop); }
+.deck-controls .btn:disabled{ opacity:.35; cursor:not-allowed; }
+
+@media (max-width:640px){
+  .deck-controls{ flex-wrap:wrap; }
+  .deck-dots{ order:3; width:100%; }
+}
