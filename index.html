@@ -14,6 +14,7 @@
     <a href="#top" class="brand"><span class="dot"></span> SCADA · AgroDrone</a>
     <button class="nav-toggle" id="navToggle" aria-label="Abrir menu">☰</button>
     <ul class="nav-links" id="navLinks">
+      <li><a href="#apresentacao">Apresentação</a></li>
       <li><a href="#sobre">O projeto</a></li>
       <li><a href="#variaveis">Variáveis</a></li>
       <li><a href="#logica">Lógica formal</a></li>
@@ -105,7 +106,33 @@
       </div>
     </div>
   </section>
+<!-- ============ APRESENTAÇÃO (SLIDES) ============ -->
+<section id="apresentacao">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker">APRESENTAÇÃO INTERATIVA · 10 SLIDES</span>
+      <h2>SCADA · AgroDrone em 10 slides</h2>
+      <p>Navegue pelos slides usando os botões abaixo ou as setas do teclado (← e →) para revisar os fundamentos do Módulo 1.</p>
+    </div>
 
+    <div class="deck" id="deck">
+      <div class="deck-topbar">
+        <span class="deck-title">SCADA · AgroDrone — Módulo 1</span>
+        <span class="deck-counter"><span id="slideCurrent">1</span> / <span id="slideTotal">10</span></span>
+      </div>
+
+      <div class="deck-viewport">
+        <div class="deck-track" id="deckTrack"><!-- slides injetados via script.js --></div>
+      </div>
+
+      <div class="deck-controls">
+        <button id="prevSlide" class="btn btn-ghost" aria-label="Slide anterior">← Anterior</button>
+        <div class="deck-dots" id="deckDots"></div>
+        <button id="nextSlide" class="btn btn-primary" aria-label="Próximo slide">Próximo →</button>
+      </div>
+    </div>
+  </div>
+</section>
   <!-- ============ SOBRE ============ -->
   <section id="sobre">
     <div class="wrap">
