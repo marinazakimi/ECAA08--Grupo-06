@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCADA · AgroDrone — Grupo 06 · ECAA08</title>
+<meta name="description" content="Sistema SCADA aplicado a um drone agrícola de pulverização — Etapa 01: Lógica Formal &amp; Sistemas Especialistas. Grupo 06, ECAA08.">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <a href="#top" class="brand"><span class="dot"></span> SCADA · AgroDrone</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menu">☰</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#sobre">O projeto</a></li>
+      <li><a href="#variaveis">Variáveis</a></li>
+      <li><a href="#logica">Lógica formal</a></li>
+      <li><a href="#simulador">Simulador</a></li>
+      <li><a href="#especialista">Motor especialista</a></li>
+      <li><a href="#aulas">Aulas</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" style="border-bottom:1px solid var(--border); padding-top:76px;">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">ECAA08 · ARQUITETURA DE SISTEMAS SCADA — ETAPA 01</span>
+        <h1>Lógica formal para um drone que decide <em>quando não pulverizar</em>.</h1>
+        <p class="lead">Um sistema de supervisão e intertravamento para um drone agrícola de pulverização: a mesma calda que trata a lavoura pode entupir um bico, vazar por uma mangueira rompida ou ser aplicada sobre uma bateria a ponto de deixar o drone em queda livre. Este projeto usa lógica proposicional, quantificadores e um motor de inferência para provar — matematicamente — que isso não acontece.</p>
+
+        <div class="meta-row">
+          <div><strong>Planta</strong>Drone agrícola de pulverização + estação de solo</div>
+          <div><strong>Equipe</strong>Arthur, Caique, Luis Felipe, Marina</div>
+          <div><strong>Módulo</strong>01 — Lógica Formal &amp; Sistemas Especialistas</div>
+        </div>
+
+        <div class="cta-row">
+          <a href="#simulador" class="btn btn-primary">Abrir simulador</a>
+          <a href="#aulas" class="btn btn-ghost">Ver memorial das aulas</a>
+        </div>
+      </div>
+
+      <div class="hero-art">
+        <svg viewBox="0 0 520 460" xmlns="http://www.w3.org/2000/svg">
+          <rect x="1" y="1" width="518" height="458" rx="6" fill="var(--bg-alt)" stroke="var(--border)"/>
+          <!-- crop rows -->
+          <g stroke="var(--crop-dim)" stroke-width="2" opacity="0.35">
+            <line x1="-40" y1="360" x2="300" y2="500"/>
+            <line x1="0" y1="360" x2="340" y2="500"/>
+            <line x1="40" y1="360" x2="380" y2="500"/>
+            <line x1="80" y1="360" x2="420" y2="500"/>
+            <line x1="120" y1="360" x2="460" y2="500"/>
+            <line x1="160" y1="360" x2="500" y2="500"/>
+            <line x1="200" y1="360" x2="540" y2="500"/>
+            <line x1="240" y1="360" x2="580" y2="500"/>
+          </g>
+          <!-- HUD ring -->
+          <circle cx="270" cy="188" r="146" fill="none" stroke="var(--crop)" stroke-width="1" opacity="0.35"/>
+          <circle cx="270" cy="188" r="118" fill="none" stroke="var(--sky)" stroke-width="1" stroke-dasharray="2 6" opacity="0.5"/>
+          <g stroke="var(--crop)" stroke-width="1.5" opacity="0.5">
+            <line x1="270" y1="42" x2="270" y2="58"/>
+            <line x1="270" y1="318" x2="270" y2="334"/>
+            <line x1="124" y1="188" x2="140" y2="188"/>
+            <line x1="400" y1="188" x2="416" y2="188"/>
+          </g>
+          <!-- drone -->
+          <g>
+            <line x1="270" y1="188" x2="212" y2="130" stroke="var(--muted)" stroke-width="2"/>
+            <line x1="270" y1="188" x2="328" y2="130" stroke="var(--muted)" stroke-width="2"/>
+            <line x1="270" y1="188" x2="212" y2="246" stroke="var(--muted)" stroke-width="2"/>
+            <line x1="270" y1="188" x2="328" y2="246" stroke="var(--muted)" stroke-width="2"/>
+            <circle cx="212" cy="130" r="13" fill="var(--panel)" stroke="var(--sky)" stroke-width="2"/>
+            <circle cx="328" cy="130" r="13" fill="var(--panel)" stroke="var(--sky)" stroke-width="2"/>
+            <circle cx="212" cy="246" r="13" fill="var(--panel)" stroke="var(--sky)" stroke-width="2"/>
+            <circle cx="328" cy="246" r="13" fill="var(--panel)" stroke="var(--sky)" stroke-width="2"/>
+            <rect x="250" y="172" width="40" height="32" rx="6" fill="var(--panel-2)" stroke="var(--crop)" stroke-width="2"/>
+            <circle cx="270" cy="188" r="4" fill="var(--crop)"/>
+          </g>
+          <!-- spray -->
+          <g stroke="var(--sky)" stroke-width="1.5" opacity="0.55">
+            <line x1="255" y1="206" x2="220" y2="290"/>
+            <line x1="270" y1="208" x2="270" y2="300"/>
+            <line x1="285" y1="206" x2="320" y2="290"/>
+          </g>
+          <g fill="var(--sky)" opacity="0.6">
+            <circle cx="220" cy="292" r="2.5"/>
+            <circle cx="270" cy="302" r="2.5"/>
+            <circle cx="320" cy="292" r="2.5"/>
+            <circle cx="236" cy="316" r="2"/>
+            <circle cx="270" cy="322" r="2"/>
+            <circle cx="304" cy="316" r="2"/>
+          </g>
+          <!-- HUD labels -->
+          <text x="30" y="40" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted-dim)">DRN_ET_01 · 78%</text>
+          <text x="30" y="56" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted-dim)">DRN_ZT_01 · 12.4 m</text>
+          <text x="336" y="40" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--crop-dim)" text-anchor="end">GPS FIX</text>
+          <text x="490" y="56" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--muted-dim)" text-anchor="end">DRN_PT_01 · 2.1 bar</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SOBRE ============ -->
+  <section id="sobre">
+    <div class="wrap">
+      <div class="grid-2">
+        <div>
+          <span class="section-head kicker">O PROJETO</span>
+          <h2>Duas frentes, um mesmo intertravamento</h2>
+          <p class="lead">O sistema é dividido em <b style="color:var(--ink)">estação de solo</b> — onde a calda é preparada e o drone é abastecido — e <b style="color:var(--ink)">unidade embarcada</b>, responsável pela pulverização em voo. O SCADA precisa enxergar as duas frentes ao mesmo tempo: um tanque cheio na base não ajuda se o reservatório do drone estiver vazio a 12 metros de altura.</p>
+          <ul class="fact-list">
+            <li><b>Monitorar</b> nível de calda, vazão, pressão de pulverização, bateria, altitude e posição de voo.</li>
+            <li><b>Bloquear</b> a decolagem e a pulverização sempre que uma condição de risco for detectada — antes que ela vire acidente.</li>
+            <li><b>Diagnosticar</b> a causa raiz de uma anomalia (bico entupido, mangueira rompida, cavitação da bomba) e não apenas emitir um alarme genérico.</li>
+            <li><b>Registrar</b> o histórico de aplicação para rastreabilidade agronômica.</li>
+          </ul>
+        </div>
+
+        <div class="panel">
+          <h3 style="font-size:1rem; margin-bottom:18px;">Arquitetura em camadas</h3>
+          <svg class="arch-svg" viewBox="0 0 400 300" xmlns="http://www.w3.org/2000/svg">
+            <g font-family="IBM Plex Sans, sans-serif" font-size="12">
+              <rect x="0" y="0" width="400" height="54" rx="4" fill="var(--panel-2)" stroke="var(--border)"/>
+              <text x="16" y="23" fill="var(--ink)" font-weight="600">Campo</text>
+              <text x="16" y="41" fill="var(--muted)" font-size="11">Sensores &amp; atuadores (solo + drone)</text>
+
+              <line x1="200" y1="54" x2="200" y2="76" stroke="var(--crop-dim)" stroke-width="1.5"/>
+              <polygon points="195,76 205,76 200,86" fill="var(--crop-dim)"/>
+
+              <rect x="0" y="86" width="400" height="54" rx="4" fill="var(--panel-2)" stroke="var(--border)"/>
+              <text x="16" y="109" fill="var(--ink)" font-weight="600">Aquisição</text>
+              <text x="16" y="127" fill="var(--muted)" font-size="11">RTU / microcontrolador embarcado + telemetria</text>
+
+              <line x1="200" y1="140" x2="200" y2="162" stroke="var(--crop-dim)" stroke-width="1.5"/>
+              <polygon points="195,162 205,162 200,172" fill="var(--crop-dim)"/>
+
+              <rect x="0" y="172" width="400" height="54" rx="4" fill="var(--panel-2)" stroke="var(--border)"/>
+              <text x="16" y="195" fill="var(--ink)" font-weight="600">Servidor SCADA</text>
+              <text x="16" y="213" fill="var(--muted)" font-size="11">Intertravamento + motor de diagnóstico + histórico</text>
+
+              <line x1="200" y1="226" x2="200" y2="248" stroke="var(--crop-dim)" stroke-width="1.5"/>
+              <polygon points="195,248 205,248 200,258" fill="var(--crop-dim)"/>
+
+              <rect x="0" y="258" width="400" height="42" rx="4" fill="rgba(191,224,90,0.08)" stroke="var(--crop-dim)"/>
+              <text x="16" y="284" fill="var(--crop)" font-weight="600">HMI do operador</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ VARIÁVEIS ============ -->
+  <section id="variaveis">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">AULA 02 · REPRESENTAÇÃO SIMBÓLICA</span>
+        <h2>Do sensor 4–20 mA à proposição booleana</h2>
+        <p>Cada grandeza contínua medida em campo é convertida em uma proposição atômica <code>p ∈ {0,1}</code> por histerese, evitando <em>chattering</em> perto do limiar. As tags seguem a norma ISA 5.1.</p>
+      </div>
+
+      <div class="tagtable-scroll">
+        <table class="tagtable">
+          <thead>
+            <tr><th>Local</th><th>Tag</th><th>Variável</th><th>Faixa</th><th>Condição crítica</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="pill solo">Estação de solo</span></td><td class="tagcell">EST_LT_01</td><td class="varname">Nível do tanque de mistura</td><td>0–100 %</td><td>&lt; 20 % → estação insuficiente</td></tr>
+            <tr><td><span class="pill solo">Estação de solo</span></td><td class="tagcell">EST_WT_01</td><td class="varname">Velocidade do vento</td><td>0–25 m/s</td><td>&gt; 8 m/s → vento_alto</td></tr>
+            <tr><td><span class="pill solo">Estação de solo</span></td><td class="tagcell">EST_TT_01</td><td class="varname">Temperatura ambiente</td><td>−10–50 °C</td><td>—</td></tr>
+            <tr><td><span class="pill drone">Drone</span></td><td class="tagcell">DRN_LT_01</td><td class="varname">Nível de calda no VANT</td><td>0–100 %</td><td>&lt; 20 % baixo · &lt; 5 % crítico</td></tr>
+            <tr><td><span class="pill drone">Drone</span></td><td class="tagcell">DRN_PT_01</td><td class="varname">Pressão de pulverização</td><td>0–6 bar</td><td>&gt; 5 bar alta · &lt; 1 bar baixa</td></tr>
+            <tr><td><span class="pill drone">Drone</span></td><td class="tagcell">DRN_FT_01</td><td class="varname">Vazão de aplicação</td><td>0–10 L/min</td><td>&lt; 0.5 baixa · ≥ 3.0 alta</td></tr>
+            <tr><td><span class="pill drone">Drone</span></td><td class="tagcell">DRN_ET_01</td><td class="varname">Tensão / carga da bateria</td><td>0–52 V</td><td>&lt; 20 % baixa · &lt; 10 % crítica</td></tr>
+            <tr><td><span class="pill drone">Drone</span></td><td class="tagcell">DRN_ZT_01</td><td class="varname">Altitude relativa</td><td>0–50 m</td><td>—</td></tr>
+            <tr><td><span class="pill drone">Drone</span></td><td class="tagcell">DRN_GPS_01</td><td class="varname">Posição / velocidade de solo</td><td>Lat/Lon</td><td>Sem fix → bloqueia decolagem</td></tr>
+            <tr><td><span class="pill drone">Drone</span></td><td class="tagcell">DRN_PMP_01</td><td class="varname">Bomba de pulverização</td><td>0–100 %</td><td>Booleano de comando derivado</td></tr>
+            <tr><td><span class="pill drone">Drone</span></td><td class="tagcell">DRN_XV_01</td><td class="varname">Válvulas seccionadoras</td><td>0/1</td><td>Aberta / fechada por setor</td></tr>
+            <tr><td><span class="pill solo">Estação de solo</span></td><td class="tagcell">ESD‑100</td><td class="varname">Botão de emergência (kill switch)</td><td>Digital</td><td>Acionado → desarma motores</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LÓGICA FORMAL ============ -->
+  <section id="logica">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">AULA 03 · TAUTOLOGIAS E CONTRADIÇÕES</span>
+        <h2>Provando que o estado de perigo é impossível</h2>
+        <p>O intertravamento crítico do projeto é o do <em>kill switch</em>: se o botão de emergência da estação (<code>e₁</code>) é acionado, os motores não podem seguir armados (<code>m₁</code>). O teorema abaixo prova, por equivalências notáveis, que sob essa regra o estado de perigo é uma contradição lógica — não apenas um comportamento esperado.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="proof">
+          <h3>Teorema de segurança do intertravamento de emergência</h3>
+          <p style="font-size:0.9rem;">Estado de perigo: <code>S = e₁ ∧ m₁</code> — botão de emergência acionado com motores ainda armados.</p>
+          <ol class="proof-steps">
+            <li>Φ = (e₁ ∧ m₁) ∧ (e₁ → ¬m₁)<span class="note">Regra de intertravamento + estado de perigo</span></li>
+            <li>Φ = (e₁ ∧ m₁) ∧ (¬e₁ ∨ ¬m₁)<span class="note">Equivalência material: A → B ≡ ¬A ∨ B</span></li>
+            <li>Φ = (e₁ ∧ ¬e₁ ∧ m₁) ∨ (e₁ ∧ m₁ ∧ ¬m₁)<span class="note">Distributividade da conjunção sobre a disjunção</span></li>
+            <li>Φ = (F ∧ m₁) ∨ (e₁ ∧ F)<span class="note">Princípio da não contradição: x ∧ ¬x ≡ F</span></li>
+            <li>Φ = F<span class="note">Elemento nulo da conjunção — Q.E.D.</span></li>
+          </ol>
+          <div class="proof-result">¬Φ ≡ V → a garantia de segurança é uma <b>tautologia invariante</b>, não uma coincidência de teste.</div>
+        </div>
+
+        <div class="panel">
+          <h3 style="font-size:1rem;">Do conectivo ao permissivo (Aula 04)</h3>
+          <p style="font-size:0.9rem;">O permissivo de decolagem combina cinco condições com conjunção — todas precisam valer ao mesmo tempo:</p>
+          <div class="log-box" style="max-height:none; font-size:0.82rem; line-height:1.9;">
+            <div>P_takeoff ≡ gps_ok ∧ ¬bat_low ∧ ¬wind_high ∧ ¬e_stop ∧ (Auto ⊕ Manual)</div>
+          </div>
+          <p style="font-size:0.9rem; margin-top:16px;">E na Aula 06, a mesma ideia escala de um sensor para <em>qualquer número</em> de setores da barra de pulverização, com quantificadores:</p>
+          <div class="log-box" style="max-height:none; font-size:0.82rem; line-height:1.9;">
+            <div>∃s ∈ S, Obstruído(s) — existe algum setor obstruído</div>
+            <div>∀s ∈ S, ¬Obstruído(s) — a barra inteira está íntegra</div>
+          </div>
+          <p style="font-size:0.85rem; margin-top:14px; color:var(--muted-dim);">A Aula 05 minimiza essas expressões (Quine–McCluskey) para que a controladora de voo avalie tudo isso em menos de um ciclo de scan, mesmo acima de 400 Hz.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SIMULADOR ============ -->
+  <section id="simulador">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">LABORATÓRIO VIRTUAL</span>
+        <h2>Simulador do motor SCADA integrado</h2>
+        <p>Mexa na telemetria ou dispare um dos sete cenários da Aula 10. O painel mostra, ao vivo: os fatos derivados pela conversão da Aula 02, os diagnósticos disparados pelo motor de regras (forward chaining, Aula 09) e o comando final — que só libera a bomba se o intertravamento estático <b style="color:var(--ink)">e</b> o sistema especialista concordarem que não há risco.</p>
+      </div>
+
+      <div class="simulator">
+        <div class="sim-topbar">
+          <span class="sim-title">MOTOR_SCADA_INTEGRADO · scan contínuo</span>
+          <div class="sim-status ok" id="simStatus"><span class="led"></span><span id="simStatusText">NOMINAL</span></div>
+        </div>
+
+        <div class="scenario-row" id="scenarioRow">
+          <button class="scenario-btn active" data-scenario="ideal">Missão ideal</button>
+          <button class="scenario-btn" data-scenario="bateria">Bateria crítica</button>
+          <button class="scenario-btn" data-scenario="vento">Vento severo</button>
+          <button class="scenario-btn" data-scenario="obstrucao">Obstrução dos bicos</button>
+          <button class="scenario-btn" data-scenario="vazamento">Vazamento</button>
+          <button class="scenario-btn" data-scenario="vazio">Reservatório vazio</button>
+          <button class="scenario-btn" data-scenario="emergencia">Emergência em voo</button>
+        </div>
+
+        <div class="sim-body">
+          <div class="sim-controls">
+
+            <div class="ctrl-group">
+              <h4>Telemetria embarcada</h4>
+              <div class="slider-row">
+                <label><span><span class="tagname">DRN_LT_01</span> Nível de calda</span><span class="val" id="v_nivel">62 %</span></label>
+                <input type="range" id="s_nivel" min="0" max="100" value="62">
+              </div>
+              <div class="slider-row">
+                <label><span><span class="tagname">DRN_PT_01</span> Pressão de pulverização</span><span class="val" id="v_pressao">2.4 bar</span></label>
+                <input type="range" id="s_pressao" min="0" max="60" value="24">
+              </div>
+              <div class="slider-row">
+                <label><span><span class="tagname">DRN_FT_01</span> Vazão de aplicação</span><span class="val" id="v_vazao">1.8 L/min</span></label>
+                <input type="range" id="s_vazao" min="0" max="60" value="18">
+              </div>
+              <div class="slider-row">
+                <label><span><span class="tagname">DRN_ET_01</span> Bateria</span><span class="val" id="v_bateria">86 %</span></label>
+                <input type="range" id="s_bateria" min="0" max="100" value="86">
+              </div>
+              <div class="slider-row">
+                <label><span><span class="tagname">EST_WT_01</span> Vento</span><span class="val" id="v_vento">3.2 m/s</span></label>
+                <input type="range" id="s_vento" min="0" max="200" value="32">
+              </div>
+            </div>
+
+            <div class="ctrl-group">
+              <h4>Comandos &amp; status digitais</h4>
+              <div class="toggle-row">
+                <label>Bomba de pulverização comandada <span class="tagname">DRN_PMP_01</span></label>
+                <label class="switch"><input type="checkbox" id="s_bomba" checked><span class="slider"></span></label>
+              </div>
+              <div class="toggle-row">
+                <label>Válvula seccionadora aberta <span class="tagname">DRN_XV_01</span></label>
+                <label class="switch"><input type="checkbox" id="s_valvula" checked><span class="slider"></span></label>
+              </div>
+              <div class="toggle-row">
+                <label>GPS com fix <span class="tagname">DRN_GPS_01</span></label>
+                <label class="switch"><input type="checkbox" id="s_gps" checked><span class="slider"></span></label>
+              </div>
+              <div class="toggle-row">
+                <label>Motores armados <span class="tagname">m₁</span></label>
+                <label class="switch"><input type="checkbox" id="s_motores" checked><span class="slider"></span></label>
+              </div>
+              <div class="toggle-row">
+                <label>Botão de emergência <span class="tagname">ESD-100 · e₁</span></label>
+                <label class="switch"><input type="checkbox" id="s_estop"><span class="slider"></span></label>
+              </div>
+            </div>
+          </div>
+
+          <div class="sim-readout">
+            <div class="readout-block">
+              <h4>Fatos derivados (Aula 02 → Aula 09)</h4>
+              <div class="prop-grid" id="propGrid"></div>
+            </div>
+
+            <div class="readout-block">
+              <h4>Permissivos &amp; intertravamento (Aulas 03–04)</h4>
+              <div class="prop-grid" id="permGrid"></div>
+            </div>
+
+            <div class="readout-block">
+              <h4>Diagnósticos ativos — forward chaining (Aula 09)</h4>
+              <ul class="diag-list empty" id="diagList"><li>Nenhum diagnóstico ativo</li></ul>
+            </div>
+
+            <div class="readout-block">
+              <h4>Comando final</h4>
+              <div class="final-command go" id="finalCommand">
+                LIGA_BOMBA = 1
+                <span class="why" id="finalWhy">Permissivo de pulverização ok e nenhum diagnóstico crítico.</span>
+              </div>
+            </div>
+
+            <div class="readout-block">
+              <h4>Historian</h4>
+              <div class="log-box" id="logBox"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MOTOR ESPECIALISTA ============ -->
+  <section id="especialista">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">AULAS 07–09 · SISTEMA ESPECIALISTA</span>
+        <h2>Base de regras do diagnóstico</h2>
+        <p>O intertravamento estático (Aulas 03–05) reage a limiares isolados, mas não enxerga <em>combinações</em> de variáveis — como bomba ligada, vazão baixa e pressão alta ao mesmo tempo, sintoma clássico de bico entupido. É para isso que existe a base de regras <code>SE...ENTÃO</code>, avaliada por <b style="color:var(--ink)">forward chaining</b> a cada novo dado de sensor.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="tagtable-scroll" style="border:1px solid var(--border); border-radius:4px;">
+          <table class="rules-table">
+            <thead><tr><th>Regra</th><th>Condição</th><th>Conclusão</th></tr></thead>
+            <tbody>
+              <tr><td class="rid">R1</td><td>Nível crítico</td><td>Falta de insumo</td></tr>
+              <tr><td class="rid">R2</td><td>Bomba ligada ∧ válvula aberta ∧ vazão baixa</td><td>Falha de pulverização</td></tr>
+              <tr><td class="rid">R3</td><td>Bomba ligada ∧ vazão baixa ∧ pressão alta</td><td>Possível obstrução</td></tr>
+              <tr><td class="rid">R4</td><td>Possível obstrução</td><td>Interromper pulverização</td></tr>
+              <tr><td class="rid">R5</td><td>Falta de insumo</td><td>Interromper pulverização</td></tr>
+              <tr><td class="rid">R6</td><td>Bateria crítica</td><td>Interromper missão</td></tr>
+              <tr><td class="rid">R7</td><td>Vento alto</td><td>Suspender pulverização</td></tr>
+              <tr><td class="rid">R8</td><td>Bomba ligada ∧ pressão baixa ∧ vazão baixa</td><td>Vazamento ou falha de bomba</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel">
+          <h3 style="font-size:1rem;">Forward vs. backward chaining</h3>
+          <p style="font-size:0.9rem;"><b style="color:var(--ink)">Forward chaining</b> parte dos fatos dos sensores e aplica as regras sucessivamente até não haver mais conclusão nova — é o que roda continuamente no simulador acima, a cada scan.</p>
+          <p style="font-size:0.9rem;"><b style="color:var(--ink)">Backward chaining</b> parte de uma hipótese (“há risco de obstrução?”) e verifica recursivamente se os fatos que a sustentam estão presentes — útil em auditoria e análise pericial pós-voo.</p>
+          <div class="log-box" style="max-height:none; font-size:0.8rem; line-height:1.8; margin-top:14px;">
+            <div>bomba_ligada + vazao_baixa + pressao_alta</div>
+            <div>&nbsp;&nbsp;↓ R3</div>
+            <div>possivel_obstrucao</div>
+            <div>&nbsp;&nbsp;↓ R4</div>
+            <div>interromper_pulverizacao</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AULAS / MEMORIAL ============ -->
+  <section id="aulas">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="kicker">MEMORIAL</span>
+        <h2>Aulas 00 a 10 — Módulo 1</h2>
+        <p>Cada aula corresponde a um notebook Python no repositório do grupo, com a fundamentação teórica, o exemplo numérico e a implementação executada.</p>
+      </div>
+
+      <table class="lesson-table">
+        <tbody id="lessonTable"></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>ECAA08 — Arquitetura de Sistemas SCADA · Grupo 06 · Arthur, Caique, Luis Felipe, Marina</p>
+    <p><a href="https://github.com/marinazakimi/ECAA08--Grupo-06" target="_blank" rel="noopener">Repositório no GitHub ↗</a></p>
+  </div>
+</footer>
+
+<script src="assets/script.js"></script>
+</body>
+</html>
