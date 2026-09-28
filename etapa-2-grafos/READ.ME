@@ -1,0 +1,61 @@
+# Etapa 02 — Grafos e árvores no SCADA do drone agrícola
+
+**ECAA08 · Grupo 06 — Arthur, Caique, Luis Felipe e Marina**  
+**Planta:** drone agrícola de pulverização e estação de solo.  
+**Entrega:** 28 de setembro de 2026.
+
+## Conteúdo e uso
+
+Esta pasta contém os oito pares de arquivos Markdown/notebook das Aulas 11 a 18, adaptados aos insumos, variáveis e lógica da Etapa 1. Os nomes seguem o modelo do professor, com sublinhados e sem espaços. Os nomes antigos `AGV`, `Produtos_Acabados` e `aux_plantafabril` são mantidos apenas para correspondência; os conteúdos tratam do drone.
+
+1. Comece pelo [layout da planta](aux_plantafabril.md) e pela [análise de continuidade](Analise_e_Continuidade_Etapa_01.md).
+2. Leia os textos e execute os notebooks na sequência 11–18.
+3. Cada notebook pode ser aberto sozinho em um ambiente Jupyter ou Colab e executado de cima para baixo. O código usa somente a biblioteca padrão de Python 3.10 ou superior. As imagens usadas nos notebooks estão anexadas ao próprio arquivo.
+4. Para conferir os oito notebooks por execução Python, coloque-os com `validar_notebooks.py` na mesma pasta e execute `python validar_notebooks.py`. Esse utilitário não exige Jupyter e não altera os arquivos.
+5. Para o repositório do grupo, use a pasta com o nome `etapa-02-grafos`. As figuras externas devem acompanhar os textos Markdown.
+
+Os notebooks já contêm as saídas obtidas na execução. O CSV é um cadastro de consulta dos trechos, não uma dependência para executar as aulas. O código é independente em cada notebook para facilitar estudo e envio individual.
+
+## Aulas
+
+| Aula | Texto teórico e aplicação | Código executado |
+|---|---|---|
+| 11 | [11_Modelagem_da_Tubulacao_e_Instrumentos_como_Grafo.md](11_Modelagem_da_Tubulacao_e_Instrumentos_como_Grafo.md) | [Notebook](11_Modelagem_da_Tubulacao_e_Instrumentos_como_Grafo.ipynb) |
+| 12 | [12_Matrizes_de_Incidencia_Adjacencia_e_Custos.md](12_Matrizes_de_Incidencia_Adjacencia_e_Custos.md) | [Notebook](12_Matrizes_de_Incidencia_Adjacencia_e_Custos.ipynb) |
+| 13 | [13_Algoritmos_de_Busca_BFS_e_DFS_em_Tubulacoes.md](13_Algoritmos_de_Busca_BFS_e_DFS_em_Tubulacoes.md) | [Notebook](13_Algoritmos_de_Busca_BFS_e_DFS_em_Tubulacoes.ipynb) |
+| 14 | [14_Menor_Caminho_Dijkstra_e_Roteamento_Dinamico.md](14_Menor_Caminho_Dijkstra_e_Roteamento_Dinamico.md) | [Notebook](14_Menor_Caminho_Dijkstra_e_Roteamento_Dinamico.ipynb) |
+| 15 | [15_Simulacao_de_Vazamentos_e_Desvio_Automatico.md](15_Simulacao_de_Vazamentos_e_Desvio_Automatico.md) | [Notebook](15_Simulacao_de_Vazamentos_e_Desvio_Automatico.ipynb) |
+| 16 | [16_Problemas_Eulerianos_e_Inspecao_de_Infraestrutura.md](16_Problemas_Eulerianos_e_Inspecao_de_Infraestrutura.md) | [Notebook](16_Problemas_Eulerianos_e_Inspecao_de_Infraestrutura.ipynb) |
+| 17 | [17_Problemas_Hamiltonianos_e_Roteamento_de_AGV.md](17_Problemas_Hamiltonianos_e_Roteamento_de_AGV.md) | [Notebook](17_Problemas_Hamiltonianos_e_Roteamento_de_AGV.ipynb) |
+| 18 | [18_Grafos_de_Logistica_de_Insumos_e_Produtos_Acabados.md](18_Grafos_de_Logistica_de_Insumos_e_Produtos_Acabados.md) | [Notebook](18_Grafos_de_Logistica_de_Insumos_e_Produtos_Acabados.ipynb) |
+
+## Principais resultados
+
+- Rede hidráulica básica: 11 vértices e 11 arestas; a proposta de filtro reserva amplia para 12 e 13.
+- Vazão total simulada de 2 L/min: 24 L iniciais tornam-se 18 L após 3 minutos.
+- Rota hidráulica até a seção A: 1,8 m na principal e 2,2 m na alternativa filtrada.
+- Rota aérea BASE–T1: 180 m nominal e 210 m após bloqueio do corredor via J1.
+- Inspeção: circuito euleriano com nove arestas, todas percorridas exatamente uma vez.
+- Missão de seis pontos: vizinho mais próximo = 660,608 m; 2-Opt = 585,332 m, redução de aproximadamente 11,4%. A força bruta confirma o ótimo desta instância.
+- Árvore geradora mínima da missão: 375,304 m, usada como cota inferior.
+- Logística: água até aplicação = 210 m; produto até aplicação = 206 m; retorno terrestre BASE–PORTÃO = 65 m.
+
+## Continuidade e hipóteses
+
+Foram preservadas as tags e as regras de diagnóstico do grupo, usando os limiares da avaliação integrada da Aula 10. As diferenças encontradas entre versões anteriores estão explicitadas no relatório de análise.
+
+O filtro reserva e as válvulas adicionais são propostas didáticas; comprimentos, trajetórias e consumo de bateria são parâmetros hipotéticos. O TSP ordena visitas, sem resolver cobertura da lavoura por faixas. Após vazamento, o algoritmo calcula uma alternativa, mas mantém a pulverização bloqueada.
+
+## Arquivos de apoio
+
+- [Layout, instrumentação e hipóteses](aux_plantafabril.md)
+- [Análise da Etapa 1 e ajustes](Analise_e_Continuidade_Etapa_01.md)
+- [Resultados da validação](Relatorio_de_Validacao.md)
+- [Cadastro de tubulações](Cadastro_Tubulacoes.csv)
+- [Diagrama hidráulico](Grafo_Hidraulico.png)
+- [Diagrama logístico](Grafo_Logitica.jpeg)
+- [Árvore de organização SCADA](Arvore_Arquitetura_SCADA.png)
+- [Ciclo de missão e árvore mínima](Rotas_e_Arvore_Minima.png)
+- [Verificador executável](validar_notebooks.py)
+
+Não há conexão com hardware, envio de comandos reais, publicação no GitHub ou instalação de dependências. Esta é uma implementação acadêmica de supervisão e simulação, com resultados reproduzíveis.
