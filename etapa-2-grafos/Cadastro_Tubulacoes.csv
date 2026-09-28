@@ -1,0 +1,14 @@
+﻿id,origem,destino,comprimento_m,diametro_mm,valvula,modos,extensao_reserva
+e01,EST_TQ_01,EST_PMP_01,1.5,20,,"mistura,abastecimento",False
+e02,EST_PMP_01,EST_MAN_01,1.0,20,,"mistura,abastecimento",False
+e03,EST_MAN_01,EST_TQ_01,2.0,20,EST_XV_REC,mistura,False
+e04,EST_MAN_01,DRN_TQ_01,3.0,15,EST_XV_01,abastecimento,False
+e05,DRN_TQ_01,DRN_FLT_01,0.4,8.0,DRN_XV_F1_IN,voo,False
+e06,DRN_FLT_01,DRN_PMP_01,0.3,8.0,DRN_XV_F1_OUT,voo,False
+e07,DRN_PMP_01,DRN_MAN_01,0.5,8.0,,voo,False
+e08,DRN_MAN_01,DRN_BICO_A,0.6,8.0,DRN_XV_01A,voo,False
+e09,DRN_MAN_01,DRN_BICO_B,0.8,8.0,DRN_XV_01B,voo,False
+e10,DRN_MAN_01,DRN_BICO_C,1.0,8.0,DRN_XV_01C,voo,False
+e11,DRN_MAN_01,DRN_BICO_D,1.2,8.0,DRN_XV_01D,voo,False
+e12,DRN_TQ_01,DRN_FLT_02,0.5,8.0,DRN_XV_F2_IN,voo,True
+e13,DRN_FLT_02,DRN_PMP_01,0.6,8.0,DRN_XV_F2_OUT,voo,True
