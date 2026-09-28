@@ -1,4 +1,4 @@
-# Etapa 02 — Grafos e árvores no SCADA do drone agrícola
+# 🚁Etapa 02 — Grafos e árvores no SCADA do drone agrícola
 
 **ECAA08 · Grupo 06 — Arthur, Caique, Luis Felipe e Marina**  
 **Planta:** drone agrícola de pulverização e estação de solo.  
