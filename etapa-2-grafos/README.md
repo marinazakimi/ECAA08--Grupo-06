@@ -8,7 +8,7 @@
 
 Esta pasta contém os oito pares de arquivos Markdown/notebook das Aulas 11 a 18, adaptados aos insumos, variáveis e lógica da Etapa 1. Os nomes seguem o modelo do professor, com sublinhados e sem espaços. Os nomes antigos `AGV`, `Produtos_Acabados` e `aux_plantafabril` são mantidos apenas para correspondência; os conteúdos tratam do drone.
 
-1. Comece pelo [layout da planta](aux_plantafabril.md) e pela [análise de continuidade](Analise_e_Continuidade_Etapa_01.md).
+1. Comece pelo [layout da planta](Arquivos_de_Apoio/aux_plantafabril.md) e pela [análise de continuidade](Arquivos_de_Apoio/Analise_e_Continuidade_Etapa_01.md).
 2. Leia os textos e execute os notebooks na sequência 11–18.
 3. Cada notebook pode ser aberto sozinho em um ambiente Jupyter ou Colab e executado de cima para baixo. O código usa somente a biblioteca padrão de Python 3.10 ou superior. As imagens usadas nos notebooks estão anexadas ao próprio arquivo.
 4. Para conferir os oito notebooks por execução Python, coloque-os com `validar_notebooks.py` na mesma pasta e execute `python validar_notebooks.py`. Esse utilitário não exige Jupyter e não altera os arquivos.
@@ -48,14 +48,14 @@ O filtro reserva e as válvulas adicionais são propostas didáticas; compriment
 
 ## Arquivos de apoio
 
-- [Layout, instrumentação e hipóteses](aux_plantafabril.md)
-- [Análise da Etapa 1 e ajustes](Analise_e_Continuidade_Etapa_01.md)
-- [Resultados da validação](Relatorio_de_Validacao.md)
-- [Cadastro de tubulações](Cadastro_Tubulacoes.csv)
-- [Diagrama hidráulico](Grafo_Hidraulico.png)
-- [Diagrama logístico](Grafo_Logitica.jpeg)
-- [Árvore de organização SCADA](Arvore_Arquitetura_SCADA.png)
-- [Ciclo de missão e árvore mínima](Rotas_e_Arvore_Minima.png)
-- [Verificador executável](validar_notebooks.py)
+- [Layout, instrumentação e hipóteses](Arquivos_de_Apoio/aux_plantafabril.md)
+- [Análise da Etapa 1 e ajustes](Arquivos_de_Apoio/Analise_e_Continuidade_Etapa_01.md)
+- [Resultados da validação](Arquivos_de_Apoio/Relatorio_de_Validacao.md)
+- [Cadastro de tubulações](Arquivos_de_Apoio/Cadastro_Tubulacoes.csv)
+- [Diagrama hidráulico](Arquivos_de_Apoio/Grafo_Hidraulico.png)
+- [Diagrama logístico](Arquivos_de_Apoio/Grafo_Logitica.jpeg)
+- [Árvore de organização SCADA](Arquivos_de_Apoio/Arvore_Arquitetura_SCADA.png)
+- [Ciclo de missão e árvore mínima](Arquivos_de_Apoio/Rotas_e_Arvore_Minima.png)
+- [Verificador executável](Arquivos_de_Apoio/validar_notebooks.py)
 
 Não há conexão com hardware, envio de comandos reais, publicação no GitHub ou instalação de dependências. Esta é uma implementação acadêmica de supervisão e simulação, com resultados reproduzíveis.
