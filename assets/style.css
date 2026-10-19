@@ -6,25 +6,23 @@
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap');
 
 :root{
-  /* cor — noite sobre a lavoura: verde-pinho escuro de base, aceno de
-     lima (linhas de plantio) como cor de destaque primária, ferrugem/solo
-     como acento secundário (links, CTAs), âmbar e coral para os dois
-     níveis de alerta do painel (caution / alarme) */
+  /* cor — noite sobre a lavoura (Alto Contraste): verde-pinho escuro de base,
+     textos e bordas clareados para máxima legibilidade (WCAG AAA) */
   --bg:        #0E1912;
   --bg-alt:    #142A1E;
   --panel:     #17271F;
   --panel-2:   #1D3226;
-  --border:    #2A4335;
-  --ink:       #EAF3E7;
-  --muted:     #93AC9C;
-  --muted-dim: #6C8577;
+  --border:    #456B55; /* Clareado de #2A4335 para destacar tabelas e divisórias */
+  --ink:       #FFFFFF; /* Branco puro para títulos e destaques principais */
+  --muted:     #E2EFE6; /* Clareado de #93AC9C para quase branco nos parágrafos */
+  --muted-dim: #B8D0C1; /* Clareado de #6C8577 para legendas, códigos e detalhes */
 
-  --crop:      #BFE05A;
-  --crop-dim:  #7FA33A;
-  --soil:      #E08A4C;
-  --sky:       #6FA0AC;
-  --caution:   #F2B84B;
-  --alarm:     #FF6459;
+  --crop:      #CFF266; /* Lima mais vibrante */
+  --crop-dim:  #A6CC52; /* Clareado de #7FA33A para ficar bem visível nos comentários */
+  --soil:      #F59E5D; /* Tom terroso/laranja mais vivo */
+  --sky:       #8CC7D6; /* Azul mais claro e legível sobre o fundo escuro */
+  --caution:   #F7C65E;
+  --alarm:     #FF7369;
 
   --font-display: 'Space Grotesk', sans-serif;
   --font-body:    'IBM Plex Sans', sans-serif;
