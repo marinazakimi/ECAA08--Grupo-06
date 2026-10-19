@@ -1,15 +1,15 @@
 /* ============================================================
-    SCADA · AgroDrone — Etapa 02: Grafos e Redes
-    Estilos específicos para a página etapa-02-grafos.html
-    Grupo 06 · ECAA08 (Arthur, Caique, Luis Felipe, Marina)
+   SCADA · AgroDrone — Etapa 02: Grafos e Redes (Alto Contraste)
+   Estilos específicos para a página etapa-02-grafos.html
+   Grupo 06 · ECAA08 (Arthur, Caique, Luis Felipe, Marina)
    ============================================================ */
 
 /* ---------------- Breadcrumbs ---------------- */
 .breadcrumbs {
   padding: 16px 0 0;
   font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--muted-dim);
+  font-size: 0.88rem;
+  color: var(--muted);
 }
 .breadcrumbs ul {
   list-style: none;
@@ -22,14 +22,17 @@
 .breadcrumbs li + li::before {
   content: "›";
   margin-right: 8px;
-  color: var(--border);
+  color: var(--crop-dim);
+  font-weight: 700;
 }
 .breadcrumbs a {
-  color: var(--muted);
+  color: var(--ink);
   border-bottom: none;
+  font-weight: 500;
 }
 .breadcrumbs a:hover {
   color: var(--crop);
+  text-decoration: underline;
 }
 
 /* ---------------- Badge & Pills ---------------- */
@@ -37,61 +40,61 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 0.2em 0.65em;
+  padding: 0.25em 0.75em;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.82rem;
   font-weight: 600;
   border-radius: 999px;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
 .badge-outline {
-  border: 1px solid var(--border);
+  border: 1px solid var(--crop-dim);
   color: var(--crop);
-  background: rgba(191,224,90,0.06);
+  background: rgba(207, 242, 102, 0.12);
 }
 .badge-alarm {
   border: 1px solid var(--alarm);
-  color: var(--alarm);
-  background: rgba(255,100,89,0.1);
+  color: #FFD2CF;
+  background: rgba(255, 100, 89, 0.2);
 }
 .badge-caution {
   border: 1px solid var(--caution);
-  color: var(--caution);
-  background: rgba(242,184,75,0.1);
+  color: #FFF0C2;
+  background: rgba(242, 184, 75, 0.2);
 }
 .badge-soil {
   border: 1px solid var(--soil);
-  color: var(--soil);
-  background: rgba(224,138,76,0.1);
+  color: #FFE0C7;
+  background: rgba(224, 138, 76, 0.2);
 }
 .badge-sky {
   border: 1px solid var(--sky);
-  color: var(--sky);
-  background: rgba(111,160,172,0.1);
+  color: #DDF4FA;
+  background: rgba(111, 160, 172, 0.2);
 }
 
 /* ---------------- Hero Index Metrics ---------------- */
 .e02-hero-index {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 8px 16px;
+  gap: 10px 18px;
   align-items: baseline;
   background: var(--panel);
   border: 1px solid var(--border);
-  padding: 20px 24px;
+  padding: 22px 26px;
   border-radius: 6px;
 }
 .e02-hero-index strong {
   font-family: var(--font-display);
-  font-size: 1.8rem;
+  font-size: 1.9rem;
   color: var(--crop);
   line-height: 1;
 }
 .e02-hero-index span {
   font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: var(--muted);
+  font-size: 0.9rem;
+  color: var(--ink);
 }
 
 /* ---------------- Main Tabs Navigation ---------------- */
@@ -100,7 +103,7 @@
 }
 .e02-tablist {
   display: flex;
-  gap: 4px;
+  gap: 6px;
   border-bottom: 2px solid var(--border);
   overflow-x: auto;
   scrollbar-width: none;
@@ -110,13 +113,13 @@
 .e02-tab {
   background: transparent;
   border: none;
-  border-bottom: 2px solid transparent;
+  border-bottom: 3px solid transparent;
   margin-bottom: -2px;
   color: var(--muted);
   font-family: var(--font-display);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
-  padding: 12px 20px;
+  padding: 14px 22px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -126,17 +129,17 @@
 }
 .e02-tab:hover {
   color: var(--ink);
-  background: rgba(191,224,90,0.04);
+  background: rgba(207, 242, 102, 0.08);
 }
 .e02-tab.active,
 .e02-tab[aria-selected="true"] {
   color: var(--crop);
   border-bottom-color: var(--crop);
-  background: rgba(191,224,90,0.08);
+  background: rgba(207, 242, 102, 0.12);
 }
 .e02-tab .badge {
-  font-size: 0.7rem;
-  padding: 0.15em 0.5em;
+  font-size: 0.78rem;
+  padding: 0.2em 0.6em;
 }
 
 .e02-panel {
@@ -150,18 +153,20 @@
 /* ---------------- Lesson Section Header ---------------- */
 .lesson-code {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--crop-dim);
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--crop);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin: 0 0 6px 0;
+  margin: 0 0 8px 0;
 }
 .e02-method-note {
-  background: rgba(111,160,172,0.08);
-  border-left: 3px solid var(--sky);
-  padding: 12px 18px;
-  font-size: 0.88rem;
-  color: var(--muted);
+  background: rgba(140, 199, 214, 0.14);
+  border-left: 4px solid var(--sky);
+  padding: 14px 20px;
+  font-size: 0.96rem;
+  line-height: 1.65;
+  color: var(--ink);
   margin: 20px 0 28px;
   border-radius: 0 4px 4px 0;
 }
@@ -177,7 +182,7 @@
   overflow: hidden;
   position: relative;
   margin: 24px 0 48px;
-  box-shadow: 0 12px 36px rgba(0,0,0,0.3);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.4);
 }
 .e02-deck:focus {
   outline: 2px solid var(--crop);
@@ -186,97 +191,101 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 20px;
+  padding: 14px 22px;
   border-bottom: 1px solid var(--border);
   background: var(--panel-2);
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.9rem;
 }
 .e02-slide-counter {
   color: var(--crop);
-  font-weight: 600;
+  font-weight: 700;
 }
 .e02-slide-title-preview {
   color: var(--ink);
-  font-weight: 500;
+  font-weight: 600;
 }
 .e02-slide-index {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   list-style: none;
   margin: 0;
-  padding: 12px 20px;
-  background: rgba(14,25,18,0.5);
+  padding: 12px 22px;
+  background: rgba(14,25,18,0.65);
   border-bottom: 1px solid var(--border);
   overflow-x: auto;
 }
 .e02-slide-index button {
-  background: var(--panel);
+  background: var(--panel-2);
   border: 1px solid var(--border);
-  color: var(--muted);
+  color: var(--ink);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  padding: 4px 10px;
-  border-radius: 3px;
+  font-size: 0.84rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 4px;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 .e02-slide-index button:hover {
-  color: var(--ink);
-  border-color: var(--muted);
+  color: var(--crop);
+  border-color: var(--crop);
 }
 .e02-slide-index button.active {
   background: var(--crop);
-  color: var(--bg);
+  color: #0E1912;
   border-color: var(--crop);
   font-weight: 700;
 }
 
 .e02-slide {
   display: none;
-  padding: 32px 36px;
+  padding: 36px 40px;
 }
 .e02-slide.is-current {
   display: block;
 }
 .e02-slide h3 {
-  font-size: 1.6rem;
+  font-size: 1.7rem;
   color: var(--ink);
-  margin: 6px 0 12px;
+  margin: 6px 0 14px;
 }
 .e02-slide-lead {
-  font-size: 1.05rem;
+  font-size: 1.08rem;
+  line-height: 1.65;
   color: var(--ink);
   max-width: 72ch;
-  margin-bottom: 24px;
+  margin-bottom: 26px;
 }
 .e02-lesson-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  gap: 36px;
   align-items: center;
 }
 .e02-lesson-copy ul {
   list-style: none;
   padding: 0;
-  margin: 0 0 20px;
+  margin: 0 0 22px;
 }
 .e02-lesson-copy li {
-  padding: 10px 0;
-  border-bottom: 1px solid rgba(42,67,53,0.5);
-  font-size: 0.92rem;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.98rem;
+  line-height: 1.65;
   color: var(--muted);
 }
 .e02-lesson-copy li strong {
-  color: var(--ink);
+  color: var(--crop);
   font-family: var(--font-mono);
-  font-size: 0.88rem;
+  font-size: 0.94rem;
 }
 .e02-lesson-takeaway {
-  background: rgba(191,224,90,0.06);
-  border-left: 3px solid var(--crop);
-  padding: 10px 14px;
-  font-size: 0.86rem;
+  background: rgba(207, 242, 102, 0.1);
+  border-left: 4px solid var(--crop);
+  padding: 12px 16px;
+  font-size: 0.95rem;
+  line-height: 1.6;
   color: var(--ink);
   border-radius: 0 4px 4px 0;
 }
@@ -285,7 +294,7 @@
   background: var(--bg-alt);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 16px;
+  padding: 18px;
   text-align: center;
 }
 .e02-lesson-figure svg {
@@ -295,16 +304,17 @@
 }
 .e02-lesson-figure figcaption {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  color: var(--muted-dim);
-  margin-top: 10px;
+  font-size: 0.84rem;
+  color: var(--muted);
+  margin-top: 12px;
+  line-height: 1.5;
 }
 
 .e02-deck-controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 24px;
+  padding: 16px 24px;
   border-top: 1px solid var(--border);
   background: var(--panel-2);
 }
@@ -341,27 +351,27 @@
   background: transparent;
   border: none;
   border-right: 1px solid var(--border);
-  padding: 14px 18px;
+  padding: 14px 20px;
   color: var(--muted);
   font-family: var(--font-display);
-  font-size: 0.9rem;
+  font-size: 0.96rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 4px;
   text-align: left;
   transition: all 0.2s ease;
-  min-width: 150px;
+  min-width: 155px;
 }
 .e02-mode-btn small {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: var(--muted-dim);
-  font-weight: 400;
+  font-weight: 500;
 }
 .e02-mode-btn:hover {
-  background: rgba(191,224,90,0.05);
+  background: rgba(207, 242, 102, 0.08);
   color: var(--ink);
 }
 .e02-mode-btn.active {
@@ -370,23 +380,26 @@
   box-shadow: inset 0 3px 0 var(--crop);
 }
 .e02-mode-btn.active small {
-  color: var(--crop-dim);
+  color: var(--ink);
 }
 
 .e02-sim-head {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 20px 24px 16px;
+  padding: 22px 24px 18px;
   border-bottom: 1px solid var(--border);
 }
 .e02-sim-head h3 {
-  font-size: 1.25rem;
-  margin: 4px 0 4px;
+  font-size: 1.35rem;
+  color: var(--ink);
+  margin: 4px 0 6px;
 }
 .e02-sim-head p {
   margin: 0;
-  font-size: 0.88rem;
+  font-size: 0.96rem;
+  color: var(--muted);
+  line-height: 1.6;
 }
 
 .e02-sim-grid {
@@ -429,26 +442,26 @@
 .e02-graph-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
+  gap: 18px;
   margin-top: 14px;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--muted);
+  font-size: 0.84rem;
+  color: var(--ink);
 }
 .e02-legend-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 .e02-legend-dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
 }
 
 .e02-controls {
   padding: 20px 24px;
-  background: rgba(14,25,18,0.4);
+  background: rgba(14,25,18,0.5);
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -456,31 +469,32 @@
 .e02-controls fieldset {
   border: 1px solid var(--border);
   border-radius: 4px;
-  padding: 12px 16px;
+  padding: 14px 16px;
   margin: 0;
 }
 .e02-controls legend {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--crop-dim);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--crop);
   padding: 0 6px;
   text-transform: uppercase;
 }
 .e02-block-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 8px;
+  gap: 10px;
   margin-top: 8px;
-  max-height: 160px;
+  max-height: 170px;
   overflow-y: auto;
 }
 .e02-block-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
   font-family: var(--font-mono);
-  font-size: 0.76rem;
-  color: var(--muted);
+  font-size: 0.85rem;
+  color: var(--ink);
   cursor: pointer;
 }
 .e02-block-item input { accent-color: var(--alarm); }
@@ -498,7 +512,7 @@
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.9rem;
 }
 .e02-result-stat {
   display: flex;
@@ -506,14 +520,15 @@
   gap: 4px;
 }
 .e02-result-stat span.label {
-  color: var(--muted-dim);
-  font-size: 0.72rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 500;
   text-transform: uppercase;
 }
 .e02-result-stat span.val {
   color: var(--crop);
-  font-weight: 600;
-  font-size: 1.05rem;
+  font-weight: 700;
+  font-size: 1.12rem;
 }
 
 /* ---------------- SVG Graph Styling ---------------- */
@@ -527,62 +542,65 @@
   stroke-width: 2.5px;
 }
 .graph-node rect {
-  fill: var(--panel);
+  fill: var(--panel-2);
   stroke: var(--border);
-  stroke-width: 1.5px;
+  stroke-width: 2px;
 }
 .graph-node.active rect {
   fill: var(--panel-2);
   stroke: var(--crop);
-  stroke-width: 2px;
+  stroke-width: 2.5px;
 }
 .graph-node.highlight rect {
-  fill: rgba(191,224,90,0.2);
+  fill: rgba(207, 242, 102, 0.25);
   stroke: var(--crop);
-  stroke-width: 2px;
+  stroke-width: 2.5px;
 }
 .graph-node.blocked rect {
-  fill: rgba(255,100,89,0.15);
+  fill: rgba(255, 115, 105, 0.22);
   stroke: var(--alarm);
+  stroke-width: 2px;
 }
 .graph-node text {
-  fill: var(--ink);
+  fill: #FFFFFF;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
+  font-weight: 600;
   text-anchor: middle;
   dominant-baseline: central;
 }
 
 .graph-edge {
   stroke: var(--muted-dim);
-  stroke-width: 1.5px;
+  stroke-width: 2px;
   fill: none;
   transition: stroke 0.2s ease, stroke-width 0.2s ease;
 }
 .graph-edge.active {
   stroke: var(--crop);
-  stroke-width: 2.5px;
+  stroke-width: 3px;
 }
 .graph-edge.highlight {
   stroke: var(--crop);
-  stroke-width: 3px;
+  stroke-width: 3.5px;
   stroke-dasharray: 6 3;
   animation: edgePulse 1.5s infinite linear;
 }
 .graph-edge.blocked {
   stroke: var(--alarm);
-  stroke-width: 2px;
+  stroke-width: 2.5px;
   stroke-dasharray: 4 4;
 }
 .graph-weight {
   font-family: var(--font-mono);
-  font-size: 9.5px;
-  fill: var(--muted);
+  font-size: 11px;
+  font-weight: 500;
+  fill: #FFFFFF;
   text-anchor: middle;
 }
 .graph-weight.highlight {
   fill: var(--crop);
-  font-weight: 600;
+  font-weight: 700;
 }
 
 @keyframes edgePulse {
@@ -593,14 +611,14 @@
 .e02-files-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 16px;
+  gap: 18px;
   margin: 24px 0 48px;
 }
 .e02-file-card {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 6px;
-  padding: 18px 20px;
+  padding: 20px 22px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -609,7 +627,7 @@
 }
 .e02-file-card:hover {
   transform: translateY(-2px);
-  border-color: var(--crop-dim);
+  border-color: var(--crop);
 }
 .e02-file-card-header {
   display: flex;
@@ -618,24 +636,26 @@
   gap: 10px;
 }
 .e02-file-card-header h4 {
-  font-size: 0.95rem;
+  font-size: 1.05rem;
+  color: var(--ink);
   margin: 0;
   font-family: var(--font-display);
 }
 .e02-file-card p {
-  font-size: 0.84rem;
+  font-size: 0.94rem;
   color: var(--muted);
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.65;
 }
 .e02-file-card-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-top: 12px;
-  border-top: 1px solid rgba(42,67,53,0.5);
+  border-top: 1px solid var(--border);
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.85rem;
+  color: var(--muted-dim);
 }
 .e02-file-card-meta a {
   color: var(--crop);
@@ -660,25 +680,25 @@
 }
 .matrix-bracket {
   font-size: 2.2rem;
-  color: var(--crop-dim);
+  color: var(--crop);
   font-weight: 300;
 }
 .code-block {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 4px;
-  padding: 14px 18px;
+  padding: 16px 20px;
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.9rem;
   color: var(--ink);
   overflow-x: auto;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 .code-block .keyword { color: var(--crop); font-weight: 600; }
-.code-block .function { color: var(--sky); }
+.code-block .function { color: var(--sky); font-weight: 600; }
 .code-block .string { color: var(--soil); }
 .code-block .comment { color: var(--muted-dim); font-style: italic; }
-.code-block .number { color: var(--caution); }
+.code-block .number { color: var(--caution); font-weight: 600; }
 
 /* ---------------- Validation Summary Table ---------------- */
 .val-table-wrap {
@@ -688,28 +708,32 @@
 .val-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.88rem;
+  font-size: 0.95rem;
 }
 .val-table th, .val-table td {
-  padding: 10px 14px;
+  padding: 12px 16px;
   text-align: left;
   border-bottom: 1px solid var(--border);
+  color: var(--muted);
+  line-height: 1.6;
 }
 .val-table th {
   background: var(--panel-2);
   color: var(--ink);
   font-family: var(--font-mono);
-  font-size: 0.78rem;
+  font-size: 0.85rem;
+  font-weight: 700;
   text-transform: uppercase;
 }
 .val-table td.num {
   font-family: var(--font-mono);
   text-align: right;
-  color: var(--muted);
+  color: var(--ink);
+  font-weight: 500;
 }
 .val-table td.status {
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: 0.86rem;
+  font-weight: 700;
   color: var(--crop);
 }
