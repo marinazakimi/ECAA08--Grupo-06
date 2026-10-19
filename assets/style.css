@@ -1,4 +1,4 @@
-/* ============================================================
+﻿/* ============================================================
    SCADA · AgroDrone — Grupo 06 · ECAA08
    Tokens: ver comentário abaixo de cada bloco
    ============================================================ */
@@ -499,3 +499,4 @@ footer p{ font-size: 0.82rem; color: var(--muted-dim); margin: 0; }
   .deck-controls{ flex-wrap:wrap; }
   .deck-dots{ order:3; width:100%; }
 }
+

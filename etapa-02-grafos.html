@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Etapa 02 — Grafos &amp; Redes | SCADA · AgroDrone — Grupo 06 · ECAA08</title>
+<meta name="description" content="Modelagem em grafos e árvores aplicada ao SCADA de um drone agrícola de pulverização: tubulações, matrizes, BFS/DFS, Dijkstra, vazamentos, Euler, TSP e logística. Grupo 06, ECAA08.">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/etapa-02.css">
+<script defer src="assets/etapa-02.js"></script>
+</head>
+<body class="etapa02-page">
+
+<!-- ============ TOPBAR ============ -->
+<header class="topbar">
+  <div class="wrap">
+    <a href="index.html" class="brand" aria-label="SCADA · AgroDrone — Início">
+      <span class="dot"></span> SCADA · AgroDrone
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menu">☰</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Etapa 01 (Lógica)</a></li>
+      <li><a href="etapa-02-grafos.html" class="active" style="color:var(--crop); font-weight:600;">Etapa 02 (Grafos)</a></li>
+      <li><a href="#apresentacao" onclick="switchTab('apresentacao')">Apresentação</a></li>
+      <li><a href="#modelagem" onclick="switchTab('modelagem')">Modelagem</a></li>
+      <li><a href="#implementacao" onclick="switchTab('implementacao')">Implementação</a></li>
+      <li><a href="#simulador" onclick="switchTab('simulador')">Simulador</a></li>
+      <li><a href="#arquivos" onclick="switchTab('arquivos')">Validação &amp; Arquivos</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="conteudo">
+  <div class="wrap">
+
+    <!-- BREADCRUMBS -->
+    <nav class="breadcrumbs" aria-label="Caminho de navegação">
+      <ul>
+        <li><a href="index.html">Início</a></li>
+        <li><a href="index.html#top">SCADA · AgroDrone</a></li>
+        <li style="color:var(--crop);">Etapa 02 — Grafos &amp; Redes</li>
+      </ul>
+    </nav>
+
+    <!-- ============ HERO ============ -->
+    <header class="hero" style="border-bottom:1px solid var(--border); padding: 48px 0 40px; background:none;">
+      <div style="display:grid; grid-template-columns: 1.15fr 0.85fr; gap:36px; align-items:center;">
+        <div>
+          <span class="eyebrow">ECAA08 · AULAS 11–18 · MODELAGEM MATEMÁTICA EM GRAFOS</span>
+          <h1 style="font-size:clamp(2rem, 3.8vw, 2.85rem); margin: 8px 0 16px;">Grafos do AgroDrone.</h1>
+          <p class="lead" style="max-width:54ch;">
+            Do circuito hidráulico de calda ao plano de voo sobre a lavoura: uma leitura rigorosa em grafos orientados e ponderados, cobrindo alcance topológico, roteamento dinâmico de menor caminho, isolamento de vazamentos com filtro reserva, inspeção euleriana de infraestrutura e otimização do Caixeiro Viajante (TSP).
+          </p>
+          <div class="meta-row" style="margin-top:20px; padding-top:14px;">
+            <div><strong>Planta</strong>Drone de pulverização + Estação de solo</div>
+            <div><strong>Equipe</strong>Arthur, Caique, Luis Felipe, Marina</div>
+            <div><strong>Entrega</strong>28 de setembro de 2026 · Grupo 06</div>
+          </div>
+        </div>
+
+        <aside class="e02-hero-index" aria-label="Resumo da Etapa 02">
+          <strong>04</strong>
+          <span>seções integradas com abas</span>
+          <strong>08</strong>
+          <span>aulas modeladas e validadas (A11–A18)</span>
+          <strong>18</strong>
+          <span>arquivos e notebooks versionados</span>
+          <strong>06</strong>
+          <span>vistas no simulador interativo em SVG</span>
+          <strong>67</strong>
+          <span>asserções assert 100% aprovadas</span>
+        </aside>
+      </div>
+    </header>
+
+    <!-- ============ NAVEGAÇÃO POR ABAS ============ -->
+    <div class="e02-tabs">
+      <div class="e02-tablist" role="tablist" aria-label="Navegação da Etapa 02">
+        <button class="e02-tab active" id="tab-apresentacao" type="button" role="tab" aria-selected="true" aria-controls="painel-apresentacao" data-e02-tab="apresentacao">
+          Apresentação <span class="badge badge-outline">10 slides</span>
+        </button>
+        <button class="e02-tab" id="tab-modelagem" type="button" role="tab" aria-selected="false" aria-controls="painel-modelagem" data-e02-tab="modelagem">
+          Modelagem da Rede <span class="badge badge-outline">12 nós · 13 arestas</span>
+        </button>
+        <button class="e02-tab" id="tab-implementacao" type="button" role="tab" aria-selected="false" aria-controls="painel-implementacao" data-e02-tab="implementacao">
+          Implementação &amp; Códigos <span class="badge badge-outline">Python 3.12</span>
+        </button>
+        <button class="e02-tab" id="tab-simulador" type="button" role="tab" aria-selected="false" aria-controls="painel-simulador" data-e02-tab="simulador">
+          Simulador Didático <span class="badge badge-outline">6 vistas interativas</span>
+        </button>
+        <button class="e02-tab" id="tab-arquivos" type="button" role="tab" aria-selected="false" aria-controls="painel-arquivos" data-e02-tab="arquivos">
+          Validação &amp; Arquivos <span class="badge badge-outline">18 arquivos</span>
+        </button>
+      </div>
+
+      <!-- ============================================================
+           ABA 1: APRESENTAÇÃO (DECK DE 10 SLIDES)
+           ============================================================ -->
+      <section class="e02-panel active" id="painel-apresentacao" role="tabpanel" aria-labelledby="tab-apresentacao" data-e02-panel="apresentacao">
+        <div class="section-head">
+          <span class="lesson-code">LEITURA GUIADA · FUNDAMENTOS E CENÁRIOS</span>
+          <h2>Apresentação da Etapa 02 em 10 Slides</h2>
+          <p>Navegue pelos slides abaixo usando as setas do teclado (← e →) ou os controles para explorar os modelos matemáticos, escolhas de engenharia e resultados de cada aula.</p>
+        </div>
+
+        <div class="e02-deck" data-etapa02-deck tabindex="0" aria-label="Apresentação em dez slides. Use as setas do teclado quando o deck estiver focado.">
+          <div class="e02-deck-meta">
+            <span class="e02-slide-counter" data-e02-slide-count>01 / 10</span>
+            <span class="e02-slide-title-preview" data-e02-slide-title>Mapa da etapa: Da lógica pontual à consciência topológica</span>
+            <button class="btn btn-sm btn-outline" type="button" data-e02-fullscreen title="Alternar modo tela cheia (Tecla F)">⛶ Tela cheia</button>
+          </div>
+
+          <ol class="e02-slide-index" aria-label="Índice dos slides">
+            <li><button type="button" data-e02-go-slide="0" class="active">01</button></li>
+            <li><button type="button" data-e02-go-slide="1">02</button></li>
+            <li><button type="button" data-e02-go-slide="2">03</button></li>
+            <li><button type="button" data-e02-go-slide="3">04</button></li>
+            <li><button type="button" data-e02-go-slide="4">05</button></li>
+            <li><button type="button" data-e02-go-slide="5">06</button></li>
+            <li><button type="button" data-e02-go-slide="6">07</button></li>
+            <li><button type="button" data-e02-go-slide="7">08</button></li>
+            <li><button type="button" data-e02-go-slide="8">09</button></li>
+            <li><button type="button" data-e02-go-slide="9">10</button></li>
+          </ol>
+
+          <!-- SLIDE 01 -->
+          <article class="e02-slide is-current" data-e02-slide data-title="Mapa da etapa: Da lógica pontual à consciência topológica">
+            <p class="lesson-code">01 / ABERTURA → AULAS 11 A 18</p>
+            <h3>Da pergunta ao modelo, do modelo ao algoritmo.</h3>
+            <p class="e02-slide-lead">Na Etapa 01, o SCADA avaliava proposições isoladas e permissivos estáticos. Na Etapa 02, o sistema ganha consciência de rede para rastrear o escoamento da calda, planejar missões de voo e inspecionar a base.</p>
+            <div class="e02-lesson-layout">
+              <div class="e02-lesson-copy">
+                <ul>
+                  <li><strong>Representar:</strong> topologia hidráulica em dígrafo $G=(V,E,w)$ (A11), matrizes de incidência $B$, adjacência $A$, custos $W$ e conservação de massa (A12).</li>
+                  <li><strong>Explorar e Recalcular:</strong> alcance e componentes via BFS/DFS (A13), menor caminho via Dijkstra (A14) e desvio autônomo pós-vazamento (A15).</li>
+                  <li><strong>Cobrir, Visitar e Ordenar:</strong> inspeção por circuito euleriano (A16), roteamento ótimo dos talhões via TSP e 2-Opt (A17) e cadeia de insumos (A18).</li>
+                </ul>
+                <div class="e02-lesson-takeaway">
+                  <strong>Contrato de Engenharia:</strong> cada aula formula uma pergunta matemática precisa; distâncias físicas e parâmetros são versionados no repositório.
+                </div>
+              </div>
+              <figure class="e02-lesson-figure">
+                <svg viewBox="0 0 540 260" role="img" aria-label="Progresso da calda">
+                  <defs>
+                    <marker id="sl-arrow-1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                      <path d="M0 1L8 5L0 9z" fill="var(--crop)" />
+                    </marker>
+                  </defs>
+                  <!-- nós -->
+                  <rect x="20" y="110" width="80" height="40" rx="5" fill="var(--panel)" stroke="var(--border)"/>
+                  <text x="60" y="134" fill="var(--ink)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">EST_TQ</text>
+                  <line x1="100" y1="130" x2="135" y2="130" stroke="var(--crop)" stroke-width="2" marker-end="url(#sl-arrow-1)"/>
+
+                  <rect x="140" y="110" width="80" height="40" rx="5" fill="var(--panel)" stroke="var(--border)"/>
+                  <text x="180" y="134" fill="var(--ink)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">DRN_TQ</text>
+                  <line x1="220" y1="130" x2="255" y2="130" stroke="var(--crop)" stroke-width="2" marker-end="url(#sl-arrow-1)"/>
+
+                  <rect x="260" y="110" width="80" height="40" rx="5" fill="var(--panel)" stroke="var(--border)"/>
+                  <text x="300" y="134" fill="var(--ink)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">FILTROS</text>
+                  <line x1="340" y1="130" x2="375" y2="130" stroke="var(--crop)" stroke-width="2" marker-end="url(#sl-arrow-1)"/>
+
+                  <rect x="380" y="110" width="80" height="40" rx="5" fill="var(--panel)" stroke="var(--border)"/>
+                  <text x="420" y="134" fill="var(--ink)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">DRN_PMP</text>
+                  <line x1="460" y1="130" x2="495" y2="130" stroke="var(--crop)" stroke-width="2" marker-end="url(#sl-arrow-1)"/>
+
+                  <circle cx="515" cy="130" r="16" fill="rgba(191,224,90,0.15)" stroke="var(--crop)" stroke-width="2"/>
+                  <text x="515" y="134" fill="var(--crop)" font-family="var(--font-mono)" font-size="10" font-weight="700" text-anchor="middle">BICOS</text>
+                </svg>
+                <figcaption>Fluxo de calda: Tanque Solo → Reservatório Drone → Filtragem → Bomba PWM → Barra de Bicos.</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <!-- SLIDE 02 -->
+          <article class="e02-slide" data-e02-slide data-title="A11 → Vértices, arcos e catálogo físico">
+            <p class="lesson-code">02 / AULA 11 → MODELAGEM DE TUBULAÇÕES</p>
+            <h3>Uma conexão precisa de sentido, modo e diâmetro.</h3>
+            <p class="e02-slide-lead">O dígrafo ponderado $G=(V, E, w)$ mapeia equipamentos como nós e trechos de mangueira como arcos direcionados, onde o peso $w$ representa o comprimento em metros.</p>
+            <div class="e02-lesson-layout">
+              <div class="e02-lesson-copy">
+                <ul>
+                  <li><strong>Ordem e Tamanho:</strong> o catálogo básico possui $|V|=11$ nós e $|E|=11$ arestas; a proposta de redundância com filtro reserva amplia a rede para 12 nós e 13 arestas.</li>
+                  <li><strong>Lema dos Graus:</strong> no modelo básico, a soma dos graus de entrada $\sum d^-(v) = 11$ e de saída $\sum d^+(v) = 11$.</li>
+                  <li><strong>Modos de Operação:</strong> em voo, a conexão de abastecimento <code>e04</code> é desacoplada e desaparece da adjacência operacional.</li>
+                </ul>
+                <div class="e02-lesson-takeaway">
+                  <strong>Integridade de Dados:</strong> a classe <code>GrafoTubulacao</code> rejeita nós inexistentes, IDs duplicados e pesos negativos.
+                </div>
+              </div>
+              <figure class="e02-lesson-figure">
+                <svg viewBox="0 0 540 240" role="img" aria-label="Subgrafo hidráulico">
+                  <path d="M70 120 L160 70 M70 120 L160 170 M220 70 L310 120 M220 170 L310 120 M370 120 L440 120" stroke="var(--crop)" stroke-width="2" fill="none"/>
+                  <rect x="20" y="105" width="80" height="30" rx="4" fill="var(--panel)" stroke="var(--crop)"/>
+                  <text x="60" y="123" fill="var(--ink)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">DRN_TQ_01</text>
+                  <rect x="150" y="55" width="80" height="30" rx="4" fill="var(--panel)" stroke="var(--border)"/>
+                  <text x="190" y="73" fill="var(--ink)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">FLT_01 (0.4m)</text>
+                  <rect x="150" y="155" width="80" height="30" rx="4" fill="var(--panel)" stroke="var(--sky)"/>
+                  <text x="190" y="173" fill="var(--sky)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">FLT_02 (0.5m)</text>
+                  <rect x="300" y="105" width="80" height="30" rx="4" fill="var(--panel)" stroke="var(--crop)"/>
+                  <text x="340" y="123" fill="var(--ink)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">DRN_PMP_01</text>
+                  <rect x="430" y="105" width="80" height="30" rx="4" fill="var(--panel)" stroke="var(--crop)"/>
+                  <text x="470" y="123" fill="var(--ink)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">DRN_MAN_01</text>
+                </svg>
+                <figcaption>Ramo de redundância: Filtro 1 (principal) e Filtro 2 (reserva de contingência).</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <!-- SLIDE 03 -->
+          <article class="e02-slide" data-e02-slide data-title="A12 → Matrizes e conservação volumétrica">
+            <p class="lesson-code">03 / AULA 12 → ÁLGEBRA MATRICIAL &amp; BALANÇO DE MASSA</p>
+            <h3>Três matrizes, posto exato e conservação física.</h3>
+            <p class="e02-slide-lead">A estrutura de conexões é formalizada em matrizes de adjacência $A$, custos $W$ e incidência $B$, acopladas ao balanço de massa do fluido incompressível.</p>
+            <div class="e02-lesson-layout">
+              <div class="e02-lesson-copy">
+                <ul>
+                  <li><strong>Matriz de Incidência $B$:</strong> dimensão $|V|\times|E|$ com $-1$ na saída e $+1$ na entrada. A soma de cada coluna vale zero: $\sum_i B_{ij} = 0$.</li>
+                  <li><strong>Posto Linear:</strong> a eliminação gaussiana exata comprova posto 10 no modelo básico e posto 11 com a extensão do filtro reserva.</li>
+                  <li><strong>Balanço de Massa:</strong> sob vazão contínua de 2 L/min, o reservatório passa de 24 L para 18 L após 3 minutos de pulverização, com resíduo nulo nos nós intermediários.</li>
+                </ul>
+                <div class="e02-lesson-takeaway">
+                  <strong>Conservação Volumétrica:</strong> a álgebra matricial valida a ausência de acúmulo espúrio nas tubulações.
+                </div>
+              </div>
+              <figure class="e02-lesson-figure">
+                <div style="background:var(--bg); border:1px solid var(--border); padding:16px; border-radius:4px; font-family:var(--font-mono); font-size:0.75rem; color:var(--ink); text-align:left; line-height:1.8;">
+                  <span style="color:var(--crop-dim);"># Balanço Volumétrico comprovado:</span><br>
+                  V_inicial = 24.0 L<br>
+                  Vazão total = 2.0 L/min (4 seções de 0.5 L/min)<br>
+                  Tempo decorrido = 3.0 min<br>
+                  V_consumido = 2.0 * 3.0 = 6.0 L<br>
+                  <strong style="color:var(--crop);">V_final = 24.0 - 6.0 = 18.0 L (Resíduo = 0.000)</strong>
+                </div>
+                <figcaption>Simulação do esvaziamento do reservatório com conservação exata.</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <!-- SLIDE 04 -->
+          <article class="e02-slide" data-e02-slide data-title="A13 → Busca em largura (BFS) e profundidade (DFS)">
+            <p class="lesson-code">04 / AULA 13 → ALGORITMOS DE BUSCA EM TUBULAÇÕES</p>
+            <h3>Encontrar alcance não é o mesmo que enumerar caminhos.</h3>
+            <p class="e02-slide-lead">A busca em largura (BFS) identifica a menor distância em saltos topológicos; a busca em profundidade (DFS) rastreia a existência de caminhos alternativos.</p>
+            <div class="e02-lesson-layout">
+              <div class="e02-lesson-copy">
+                <ul>
+                  <li><strong>BFS (Fila FIFO):</strong> descobre primeiro os bicos com menor número de arestas intermediárias, garantindo o menor nível na árvore geradora.</li>
+                  <li><strong>DFS (Pilha LIFO):</strong> enumera com precisão dois caminhos independentes entre o reservatório <code>DRN_TQ_01</code> e a bomba <code>DRN_PMP_01</code> quando o filtro reserva está habilitado.</li>
+                  <li><strong>Diagnóstico de Desconexão:</strong> quando a bomba embarcada é bloqueada, a BFS comprova a perda imediata de alcance a todas as 4 seções de bicos.</li>
+                </ul>
+                <div class="e02-lesson-takeaway">
+                  <strong>Reachability:</strong> o SCADA consulta a BFS para saber quais setores da lavoura ainda podem ser atendidos.
+                </div>
+              </div>
+              <figure class="e02-lesson-figure">
+                <svg viewBox="0 0 540 220" role="img" aria-label="Árvore BFS">
+                  <circle cx="270" cy="30" r="16" fill="var(--panel-2)" stroke="var(--crop)" stroke-width="2"/>
+                  <text x="270" y="34" fill="var(--crop)" font-family="var(--font-mono)" font-size="9" font-weight="700" text-anchor="middle">DRN_TQ</text>
+                  <line x1="270" y1="46" x2="180" y2="90" stroke="var(--crop)" stroke-width="1.5"/>
+                  <line x1="270" y1="46" x2="360" y2="90" stroke="var(--sky)" stroke-width="1.5"/>
+                  <circle cx="180" cy="100" r="14" fill="var(--panel)" stroke="var(--crop)"/>
+                  <text x="180" y="104" fill="var(--ink)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">FLT_01</text>
+                  <circle cx="360" cy="100" r="14" fill="var(--panel)" stroke="var(--sky)"/>
+                  <text x="360" y="104" fill="var(--sky)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">FLT_02</text>
+                  <line x1="180" y1="114" x2="270" y2="160" stroke="var(--crop)" stroke-width="1.5"/>
+                  <line x1="360" y1="114" x2="270" y2="160" stroke="var(--sky)" stroke-width="1.5"/>
+                  <circle cx="270" cy="170" r="14" fill="var(--panel)" stroke="var(--crop)"/>
+                  <text x="270" y="174" fill="var(--ink)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">BOMBA</text>
+                </svg>
+                <figcaption>Dois caminhos descobertos por DFS para alimentar a bomba.</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <!-- SLIDE 05 -->
+          <article class="e02-slide" data-e02-slide data-title="A14 → Menor caminho (Dijkstra) e roteamento">
+            <p class="lesson-code">05 / AULA 14 → OTIMIZAÇÃO POR DIJKSTRA</p>
+            <h3>Minimizar a soma dos comprimentos físicos disponíveis.</h3>
+            <p class="e02-slide-lead">O algoritmo de Dijkstra com fila de prioridades determina a rota de menor custo métrico em duas redes distintas: mangueiras hidráulicas e corredores aéreos de navegação.</p>
+            <div class="e02-lesson-layout">
+              <div class="e02-lesson-copy">
+                <ul>
+                  <li><strong>Rota Hidráulica Nominal:</strong> do reservatório até a Seção A de bicos via Filtro 1 custa <strong>1,80 metros</strong> ($0.4 + 0.3 + 0.5 + 0.6$).</li>
+                  <li><strong>Rota Alternativa Filtrada:</strong> através do Filtro Reserva 2 custa <strong>2,20 metros</strong> ($0.5 + 0.6 + 0.5 + 0.6$).</li>
+                  <li><strong>Corredores de Voo Aéreo:</strong> a rota nominal <code>BASE → T1</code> de 180 m é recalculada para 210 m após interdição do corredor principal.</li>
+                </ul>
+                <div class="e02-lesson-takeaway">
+                  <strong>Validação Cruzada:</strong> 40 dígrafos aleatórios com 1440 consultas comprovaram 100% de coincidência entre Dijkstra e Floyd-Warshall.
+                </div>
+              </div>
+              <figure class="e02-lesson-figure">
+                <div style="background:var(--bg); border:1px solid var(--border); padding:14px; border-radius:4px; font-family:var(--font-mono); font-size:0.75rem; text-align:left; color:var(--ink); line-height:1.7;">
+                  <span style="color:var(--crop);">✓ Dijkstra Rota Principal (Filtro 1):</span><br>
+                  DRN_TQ → FLT_01 → DRN_PMP → DRN_MAN → BICO_A<br>
+                  <strong>Custo: 1.800 m</strong><br><br>
+                  <span style="color:var(--sky);">✓ Dijkstra Rota Reserva (Filtro 2):</span><br>
+                  DRN_TQ → FLT_02 → DRN_PMP → DRN_MAN → BICO_A<br>
+                  <strong>Custo: 2.200 m (+22.2%)</strong>
+                </div>
+                <figcaption>Comparação exata dos caminhos mínimos no circuito embarcado.</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <!-- SLIDE 06 -->
+          <article class="e02-slide" data-e02-slide data-title="A15 → Simulação de vazamentos e desvio automático">
+            <p class="lesson-code">06 / AULA 15 → INTERTRAVAMENTO DE SEGURANÇA &amp; DESVIO</p>
+            <h3>Uma falha física altera o grafo e desliga a bomba imediatamente.</h3>
+            <p class="e02-slide-lead">Ao detectar vazamento na mangueira do filtro principal, o SCADA isola o trecho, corta a bomba para evitar perda de insumo e calcula a rota pelo filtro de contingência.</p>
+            <div class="e02-lesson-layout">
+              <div class="e02-lesson-copy">
+                <ul>
+                  <li><strong>Diagnóstico Integrado:</strong> telemetria com pressão baixa + vazão baixa enquanto a bomba está ligada aciona a regra R8 da Etapa 01.</li>
+                  <li><strong>Ação Imediata:</strong> o intertravamento estático comuta <code>LIGA_BOMBA = 0</code> e fecha as válvulas <code>DRN_XV_F1_IN</code> e <code>DRN_XV_F1_OUT</code>.</li>
+                  <li><strong>Princípio de Segurança:</strong> o sistema calcula o desvio pelo Filtro 2, mas NÃO religa a bomba autonomamente — exige confirmação explícita do operador de solo.</li>
+                </ul>
+                <div class="e02-lesson-takeaway">
+                  <strong>Safety First:</strong> a rota existe matematicamente, mas a aplicação permanece travada por segurança.
+                </div>
+              </div>
+              <figure class="e02-lesson-figure">
+                <div style="background:rgba(255,100,89,0.08); border:1px solid var(--alarm); padding:14px; border-radius:4px; font-family:var(--font-mono); font-size:0.75rem; text-align:left; line-height:1.7;">
+                  <strong style="color:var(--alarm);">ALARME ATIVO: VAZAMENTO EM e05</strong><br>
+                  [1] Corte imediato: LIGA_BOMBA = 0<br>
+                  [2] Isolamento de linha: DRN_XV_F1_IN / OUT = 0<br>
+                  [3] Habilitação de reserva: DRN_XV_F2 = 1<br>
+                  [4] Recálculo dinâmico: rota segura 2.20 m<br>
+                  <span style="color:var(--caution);">[5] Permissivo: Aguardando autorização do operador</span>
+                </div>
+                <figcaption>Sequência de intertravamento e recálculo da Aula 15.</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <!-- SLIDE 07 -->
+          <article class="e02-slide" data-e02-slide data-title="A16 → Inspeção de infraestrutura e circuito euleriano">
+            <p class="lesson-code">07 / AULA 16 → PROBLEMAS EULERIANOS</p>
+            <h3>Inspecionar cada via da base exatamente uma vez.</h3>
+            <p class="e02-slide-lead">O circuito de manutenção da estação de solo é formulado como um multigrafo não dirigido de 6 locais e 9 vias de acesso físico, resolvido pelo algoritmo de Hierholzer.</p>
+            <div class="e02-lesson-layout">
+              <div class="e02-lesson-copy">
+                <ul>
+                  <li><strong>Condição de Euler:</strong> todos os vértices possuem grau par — BASE(4), TANQUE(2), BOMBA_SOLO(4), ABASTECIMENTO(2), BANCADA_DRONE(4), LAVAGEM(2).</li>
+                  <li><strong>Existência de Circuito Fechado:</strong> como o grafo é conexo e todos os graus são pares, existe um circuito que percorre as 9 vias sem repetir nenhuma e retorna à BASE.</li>
+                  <li><strong>Hierholzer:</strong> o algoritmo encontra o circuito exato em tempo linear $\mathcal{O}(|E|)$, otimizando a ronda do técnico de solo.</li>
+                </ul>
+                <div class="e02-lesson-takeaway">
+                  <strong>Cobertura Completa:</strong> 100% dos trechos de mangueiras e solo são inspecionados com deslocamento mínimo.
+                </div>
+              </div>
+              <figure class="e02-lesson-figure">
+                <svg viewBox="0 0 540 220" role="img" aria-label="Grafo Euleriano">
+                  <polygon points="270,30 160,85 160,165 270,210 380,165 380,85" fill="none" stroke="var(--crop)" stroke-width="2"/>
+                  <line x1="270" y1="30" x2="160" y2="165" stroke="var(--crop)" stroke-width="1.5"/>
+                  <line x1="270" y1="30" x2="380" y2="165" stroke="var(--crop)" stroke-width="1.5"/>
+                  <line x1="160" y1="165" x2="380" y2="165" stroke="var(--crop)" stroke-width="1.5"/>
+                  <circle cx="270" cy="30" r="10" fill="var(--soil)"/>
+                  <text x="270" y="16" fill="var(--ink)" font-family="var(--font-mono)" font-size="8" text-anchor="middle">BASE (grau 4)</text>
+                  <circle cx="160" cy="85" r="8" fill="var(--panel)"/>
+                  <circle cx="160" cy="165" r="8" fill="var(--panel)"/>
+                  <circle cx="270" cy="210" r="8" fill="var(--panel)"/>
+                  <circle cx="380" cy="165" r="8" fill="var(--panel)"/>
+                  <circle cx="380" cy="85" r="8" fill="var(--panel)"/>
+                </svg>
+                <figcaption>Multigrafo com 6 nós e 9 arestas: todos vértices com grau par.</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <!-- SLIDE 08 -->
+          <article class="e02-slide" data-e02-slide data-title="A17 → Caixeiro viajante (TSP), 2-Opt e árvore mínima">
+            <p class="lesson-code">08 / AULA 17 → PROBLEMA DO CAIXEIRO VIAJANTE NO VANT</p>
+            <h3>Visitar todos os talhões e retornar à base com menor gasto de bateria.</h3>
+            <p class="e02-slide-lead">O planejamento de pulverização sobre 5 talhões agrícolas + BASE é formulado como Caixeiro Viajante (TSP). A heurística 2-Opt atinge o ótimo global comprovado por busca exata.</p>
+            <div class="e02-lesson-layout">
+              <div class="e02-lesson-copy">
+                <ul>
+                  <li><strong>Vizinho Mais Próximo (NN):</strong> constrói um ciclo inicial guloso de <strong>660,608 metros</strong>.</li>
+                  <li><strong>Refinamento 2-Opt:</strong> desfaz cruzamentos de arestas e reduz a rota para <strong>585,332 metros</strong> (economia de 11,4% de percurso e bateria).</li>
+                  <li><strong>Ótimo Global Comprovado:</strong> a força bruta avalia todas as 120 permutações $((6-1)!)$ e confirma que 585,332 m é a solução ótima absoluta.</li>
+                  <li><strong>Cota Inferior (AGM):</strong> a Árvore Geradora Mínima (Kruskal) mede <strong>375,304 metros</strong>, servindo como limite matemático inferior.</li>
+                </ul>
+                <div class="e02-lesson-takeaway">
+                  <strong>Economia de Voo:</strong> 75,27 metros a menos por ciclo de bateria garantem maior área tratada por decolagem.
+                </div>
+              </div>
+              <figure class="e02-lesson-figure">
+                <div style="background:var(--bg); border:1px solid var(--border); padding:14px; border-radius:4px; font-family:var(--font-mono); font-size:0.75rem; text-align:left; line-height:1.8;">
+                  • Vizinho Mais Próximo: 660.608 m<br>
+                  • <strong style="color:var(--crop);">2-Opt (Ótimo Exato): 585.332 m (-11.4%)</strong><br>
+                  • Força Bruta (120 ciclos): 585.332 m<br>
+                  • Cota Inferior (AGM Kruskal): 375.304 m
+                </div>
+                <figcaption>Métricas comparativas dos algoritmos de roteamento no VANT.</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <!-- SLIDE 09 -->
+          <article class="e02-slide" data-e02-slide data-title="A18 → Logística de insumos e apoio terrestre">
+            <p class="lesson-code">09 / AULA 18 → CADEIA LOGÍSTICA DE SUPRIMENTOS</p>
+            <h3>Do poço e depósito químico até a gota pulverizada na lavoura.</h3>
+            <p class="e02-slide-lead">A rede de materiais $G_M$ modela os fluxos de água e defensivo até a mistura, enquanto o grafo de apoio mapeia o trajeto do veículo de abastecimento terrestre.</p>
+            <div class="e02-lesson-layout">
+              <div class="e02-lesson-copy">
+                <ul>
+                  <li><strong>Fluxo da Água:</strong> da fonte até a aplicação agrícola totaliza <strong>210 metros</strong> de deslocamento físico acumulado.</li>
+                  <li><strong>Fluxo do Defensivo:</strong> do depósito de químicos até a aplicação totaliza <strong>206 metros</strong>.</li>
+                  <li><strong>Veículo de Solo:</strong> trajeto <code>BASE → PORTÃO</code> mapeado em <strong>65 metros</strong> para reabastecimento de baterias e insumos.</li>
+                  <li><strong>Ordenação Topológica:</strong> validação de precedência das etapas de preparo, abastecimento e voo via algoritmo de Kahn.</li>
+                </ul>
+                <div class="e02-lesson-takeaway">
+                  <strong>Rastreabilidade Total:</strong> nenhum insumo é aplicado sem registro do lote de calda e do talhão de destino.
+                </div>
+              </div>
+              <figure class="e02-lesson-figure">
+                <svg viewBox="0 0 540 220" role="img" aria-label="Rede de Insumos">
+                  <rect x="30" y="50" width="100" height="36" rx="4" fill="var(--panel-2)" stroke="var(--sky)"/>
+                  <text x="80" y="72" fill="var(--sky)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">ÁGUA (210m)</text>
+                  <rect x="30" y="140" width="100" height="36" rx="4" fill="var(--panel-2)" stroke="var(--soil)"/>
+                  <text x="80" y="162" fill="var(--soil)" font-family="var(--font-mono)" font-size="9" text-anchor="middle">DEFENSIVO (206m)</text>
+                  <line x1="130" y1="68" x2="220" y2="105" stroke="var(--sky)" stroke-width="2"/>
+                  <line x1="130" y1="158" x2="220" y2="125" stroke="var(--soil)" stroke-width="2"/>
+                  <rect x="220" y="95" width="110" height="40" rx="5" fill="var(--panel)" stroke="var(--crop)"/>
+                  <text x="275" y="120" fill="var(--ink)" font-family="var(--font-mono)" font-size="10" text-anchor="middle">PREPARO CALDA</text>
+                  <line x1="330" y1="115" x2="400" y2="115" stroke="var(--crop)" stroke-width="2"/>
+                  <rect x="400" y="95" width="100" height="40" rx="5" fill="var(--panel)" stroke="var(--crop)"/>
+                  <text x="450" y="120" fill="var(--crop)" font-family="var(--font-mono)" font-size="10" font-weight="700" text-anchor="middle">TALHÕES</text>
+                </svg>
+                <figcaption>Rastreamento logístico da calda agrícola até a cultura tratada.</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <!-- SLIDE 10 -->
+          <article class="e02-slide" data-e02-slide data-title="Validação e encerramento: 86 células, 67 asserts e 100% aprovado">
+            <p class="lesson-code">10 / FECHAMENTO → RELATÓRIO DE VALIDAÇÃO</p>
+            <h3>Uma evidência por resultado, nenhuma hipótese sem teste.</h3>
+            <p class="e02-slide-lead">Os 8 pares de arquivos (Aulas 11 a 18) foram submetidos a testes rigorosos em Python 3.12, comprovando integridade algébrica, topológica e comportamental.</p>
+            <div class="e02-lesson-layout">
+              <div class="e02-lesson-copy">
+                <ul>
+                  <li><strong>Execução Automatizada:</strong> 86 células de código executadas do início ao fim sem exceções, contendo 67 asserções <code>assert</code>.</li>
+                  <li><strong>Validação Independente:</strong> o utilitário <code>validar_notebooks.py</code> reexecutou todos os notebooks e confirmou as saídas esperadas.</li>
+                  <li><strong>Conformidade com o Enunciado:</strong> nomenclatura normalizada, padrão ISA 5.1 preservado e aderência total aos requisitos da disciplina.</li>
+                </ul>
+                <div class="e02-lesson-takeaway">
+                  <strong>Status Final:</strong> Etapa 02 concluída com sucesso absoluto e pronta para publicação no site do Grupo 06.
+                </div>
+              </div>
+              <figure class="e02-lesson-figure">
+                <div style="background:var(--panel-2); border:1px solid var(--border); padding:16px; border-radius:6px; text-align:center;">
+                  <span class="badge badge-outline" style="font-size:0.9rem; padding:0.4em 1em; margin-bottom:12px;">STATUS GERAL: 100% PASSOU</span>
+                  <p style="font-family:var(--font-mono); font-size:0.8rem; color:var(--muted); margin:0;">
+                    8 notebooks Python 3.12 · 67 asserções · 0 erros<br>
+                    Validação cruzada com Floyd-Warshall (1440 pares): 100% OK
+                  </p>
+                </div>
+                <figcaption>Síntese executiva do Relatório de Validação da Etapa 02.</figcaption>
+              </figure>
+            </div>
+          </article>
+
+          <!-- CONTROLES DO DECK -->
+          <div class="e02-deck-controls">
+            <button class="btn btn-sm btn-ghost" type="button" data-e02-prev disabled>← Slide Anterior</button>
+            <span style="font-family:var(--font-mono); font-size:0.75rem; color:var(--muted-dim);">Use as setas do teclado (← e →)</span>
+            <button class="btn btn-sm btn-primary" type="button" data-e02-next>Próximo Slide →</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           ABA 2: MODELAGEM DA REDE (NÓS, ARESTAS E PESOS)
+           ============================================================ -->
+      <section class="e02-panel" id="painel-modelagem" role="tabpanel" aria-labelledby="tab-modelagem" data-e02-panel="modelagem">
+        <div class="section-head">
+          <span class="lesson-code">AULA 11 · MODELAGEM TOPOLÓGICA</span>
+          <h2>Modelagem Matemática da Rede</h2>
+          <p>
+            O processo de distribuição e aplicação de calda do AgroDrone é formalizado matematicamente como um <strong>dígrafo ponderado</strong> $G = (V, E, w)$, onde $V$ representa os nós físicos (tanques, bombas, filtros, distribuidores e bicos), $E$ os trechos orientados de mangueira e tubulação, e $w: E \to \mathbb{R}^+$ o comprimento físico em metros.
+          </p>
+        </div>
+
+        <!-- TABELA DE VÉRTICES (NÓS) -->
+        <h3 style="font-size:1.15rem; margin-top:28px;">Catálogo de Vértices ($|V| = 12$)</h3>
+        <p style="font-size:0.9rem; color:var(--muted); margin-bottom:14px;">Identificação dos nós da planta de solo e da unidade embarcada, com as tags de instrumentação correspondentes da Etapa 01:</p>
+        <div class="tagtable-scroll">
+          <table class="tagtable">
+            <thead>
+              <tr>
+                <th>Vértice (ID)</th>
+                <th>Tag ISA 5.1</th>
+                <th>Equipamento / Função Física</th>
+                <th>Localização</th>
+                <th>Capacidade / Característica</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="tagcell">EST_TQ_01</td><td>EST_LT_01</td><td>Tanque de Mistura e Preparo de Calda</td><td><span class="pill solo">Estação Solo</span></td><td>500 L · sensor de nível 4–20 mA</td></tr>
+              <tr><td class="tagcell">EST_PMP_01</td><td>EST_PMP_01</td><td>Bomba de Solo (Mistura e Transferência)</td><td><span class="pill solo">Estação Solo</span></td><td>Centrífuga · compartilhada por modo</td></tr>
+              <tr><td class="tagcell">EST_MAN_01</td><td>—</td><td>Manifold / Distribuidor de Solo</td><td><span class="pill solo">Estação Solo</span></td><td>Seleção recirculação vs abastecimento</td></tr>
+              <tr><td class="tagcell">DRN_TQ_01</td><td>DRN_LT_01</td><td>Reservatório Embarcado de Calda</td><td><span class="pill drone">Drone</span></td><td>30 L · medição contínua de nível</td></tr>
+              <tr><td class="tagcell">DRN_FLT_01</td><td>—</td><td>Filtro Principal de Linha</td><td><span class="pill drone">Drone</span></td><td>Malha 100 · ramo primário de voo</td></tr>
+              <tr><td class="tagcell">DRN_FLT_02</td><td>—</td><td>Filtro Reserva de Linha (Contingência)</td><td><span class="pill drone">Drone</span></td><td>Malha 100 · proposta didática de redundância</td></tr>
+              <tr><td class="tagcell">DRN_PMP_01</td><td>DRN_PT/FT_01</td><td>Bomba de Pulverização PWM</td><td><span class="pill drone">Drone</span></td><td>Diafragma 12V · monitorada por pressão e vazão</td></tr>
+              <tr><td class="tagcell">DRN_MAN_01</td><td>—</td><td>Manifold / Distribuidor da Barra de Bicos</td><td><span class="pill drone">Drone</span></td><td>Divisão proporcional para as 4 seções</td></tr>
+              <tr><td class="tagcell">DRN_BICO_A</td><td>DRN_XV_01A</td><td>Seção A de Pulverização (Esquerda Externa)</td><td><span class="pill drone">Drone</span></td><td>0.5 L/min nominal · válvula seccionadora</td></tr>
+              <tr><td class="tagcell">DRN_BICO_B</td><td>DRN_XV_01B</td><td>Seção B de Pulverização (Esquerda Interna)</td><td><span class="pill drone">Drone</span></td><td>0.5 L/min nominal · válvula seccionadora</td></tr>
+              <tr><td class="tagcell">DRN_BICO_C</td><td>DRN_XV_01C</td><td>Seção C de Pulverização (Direita Interna)</td><td><span class="pill drone">Drone</span></td><td>0.5 L/min nominal · válvula seccionadora</td></tr>
+              <tr><td class="tagcell">DRN_BICO_D</td><td>DRN_XV_01D</td><td>Seção D de Pulverização (Direita Externa)</td><td><span class="pill drone">Drone</span></td><td>0.5 L/min nominal · válvula seccionadora</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- TABELA DE ARESTAS -->
+        <h3 style="font-size:1.15rem; margin-top:36px;">Catálogo de Trechos e Arestas ($|E| = 13$)</h3>
+        <p style="font-size:0.9rem; color:var(--muted); margin-bottom:14px;">Propriedades físicas dos trechos de mangueira, atuadores acoplados e modos de operação:</p>
+        <div class="tagtable-scroll">
+          <table class="tagtable">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Origem $u$</th>
+                <th>Destino $v$</th>
+                <th>Comprimento $w$ (m)</th>
+                <th>Diâmetro (mm)</th>
+                <th>Válvula Associada</th>
+                <th>Modo Operacional</th>
+                <th>Extensão Reserva</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="tagcell">e01</td><td>EST_TQ_01</td><td>EST_PMP_01</td><td>1.5 m</td><td>20 mm</td><td>—</td><td>mistura, abastecimento</td><td>Não</td></tr>
+              <tr><td class="tagcell">e02</td><td>EST_PMP_01</td><td>EST_MAN_01</td><td>1.0 m</td><td>20 mm</td><td>—</td><td>mistura, abastecimento</td><td>Não</td></tr>
+              <tr><td class="tagcell">e03</td><td>EST_MAN_01</td><td>EST_TQ_01</td><td>2.0 m</td><td>20 mm</td><td>EST_XV_REC</td><td>mistura (recirculação)</td><td>Não</td></tr>
+              <tr><td class="tagcell">e04</td><td>EST_MAN_01</td><td>DRN_TQ_01</td><td>3.0 m</td><td>15 mm</td><td>EST_XV_01</td><td>abastecimento (solo)</td><td>Não</td></tr>
+              <tr><td class="tagcell">e05</td><td>DRN_TQ_01</td><td>DRN_FLT_01</td><td>0.4 m</td><td>8.0 mm</td><td>DRN_XV_F1_IN</td><td>voo (nominal)</td><td>Não</td></tr>
+              <tr><td class="tagcell">e06</td><td>DRN_FLT_01</td><td>DRN_PMP_01</td><td>0.3 m</td><td>8.0 mm</td><td>DRN_XV_F1_OUT</td><td>voo (nominal)</td><td>Não</td></tr>
+              <tr><td class="tagcell">e07</td><td>DRN_PMP_01</td><td>DRN_MAN_01</td><td>0.5 m</td><td>8.0 mm</td><td>—</td><td>voo</td><td>Não</td></tr>
+              <tr><td class="tagcell">e08</td><td>DRN_MAN_01</td><td>DRN_BICO_A</td><td>0.6 m</td><td>8.0 mm</td><td>DRN_XV_01A</td><td>voo</td><td>Não</td></tr>
+              <tr><td class="tagcell">e09</td><td>DRN_MAN_01</td><td>DRN_BICO_B</td><td>0.8 m</td><td>8.0 mm</td><td>DRN_XV_01B</td><td>voo</td><td>Não</td></tr>
+              <tr><td class="tagcell">e10</td><td>DRN_MAN_01</td><td>DRN_BICO_C</td><td>1.0 m</td><td>8.0 mm</td><td>DRN_XV_01C</td><td>voo</td><td>Não</td></tr>
+              <tr><td class="tagcell">e11</td><td>DRN_MAN_01</td><td>DRN_BICO_D</td><td>1.2 m</td><td>8.0 mm</td><td>DRN_XV_01D</td><td>voo</td><td>Não</td></tr>
+              <tr><td class="tagcell" style="color:var(--sky);">e12</td><td>DRN_TQ_01</td><td>DRN_FLT_02</td><td>0.5 m</td><td>8.0 mm</td><td>DRN_XV_F2_IN</td><td>voo (contingência)</td><td><strong style="color:var(--sky);">Sim (Reserva)</strong></td></tr>
+              <tr><td class="tagcell" style="color:var(--sky);">e13</td><td>DRN_FLT_02</td><td>DRN_PMP_01</td><td>0.6 m</td><td>8.0 mm</td><td>DRN_XV_F2_OUT</td><td>voo (contingência)</td><td><strong style="color:var(--sky);">Sim (Reserva)</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- MODOS DE OPERAÇÃO -->
+        <h3 style="font-size:1.15rem; margin-top:36px;">Modos Operacionais &amp; Adjacência Dinâmica</h3>
+        <div class="grid-2" style="margin-top:14px;">
+          <div class="panel">
+            <h4 style="font-size:0.95rem; color:var(--crop); margin-bottom:8px;">Modo Mistura (Solo)</h4>
+            <p style="font-size:0.86rem; margin:0 0 10px;">Ativa os arcos <code>{e01, e02, e03}</code>. Forma o ciclo orientado fechado <code>EST_TQ_01 → EST_PMP_01 → EST_MAN_01 → EST_TQ_01</code>, mantendo o defensivo homogeneizado no tanque de 500 L antes do abastecimento.</p>
+            <span class="badge badge-outline">Ciclo Orientado Ativo</span>
+          </div>
+          <div class="panel">
+            <h4 style="font-size:0.95rem; color:var(--soil); margin-bottom:8px;">Modo Abastecimento (Solo → VANT)</h4>
+            <p style="font-size:0.86rem; margin:0 0 10px;">Ativa os arcos <code>{e01, e02, e04}</code> com o drone pousado na base operacional. A válvula <code>EST_XV_01</code> abre para transferir 30 L de calda até o sensor <code>DRN_LT_01</code> atingir 100%.</p>
+            <span class="badge badge-soil">Transferência de Carga</span>
+          </div>
+          <div class="panel">
+            <h4 style="font-size:0.95rem; color:var(--crop); margin-bottom:8px;">Modo Voo / Pulverização Nominal</h4>
+            <p style="font-size:0.86rem; margin:0 0 10px;">Ativa os arcos <code>{e05, e06, e07, e08, e09, e10, e11}</code>. A mangueira de abastecimento <code>e04</code> é desconectada e desaparece da adjacência. A calda flui pelo Filtro Principal 1 até os bicos.</p>
+            <span class="badge badge-outline">Operação Embarcada</span>
+          </div>
+          <div class="panel">
+            <h4 style="font-size:0.95rem; color:var(--sky); margin-bottom:8px;">Modo Voo Contingência (Filtro Reserva)</h4>
+            <p style="font-size:0.86rem; margin:0 0 10px;">Ativa os arcos <code>{e12, e13, e07, e08, e09, e10, e11}</code> quando há falha ou vazamento detectado em <code>e05</code> ou <code>e06</code>. Isola o ramo 1 e mantém a filtragem da calda antes da bomba.</p>
+            <span class="badge badge-sky">Redundância Ativa</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           ABA 3: IMPLEMENTAÇÃO & CÓDIGOS
+           ============================================================ -->
+      <section class="e02-panel" id="painel-implementacao" role="tabpanel" aria-labelledby="tab-implementacao" data-e02-panel="implementacao">
+        <div class="section-head">
+          <span class="lesson-code">ARQUITETURA DE SOFTWARE · PYTHON 3.12</span>
+          <h2>Implementação dos Algoritmos</h2>
+          <p>
+            O código desenvolvido pelo Grupo 06 foi projetado para rodar com a <strong>biblioteca padrão de Python 3.10+</strong> (módulos <code>collections.deque</code>, <code>heapq</code>, <code>math</code>, <code>csv</code>), sem dependências externas complexas, garantindo portabilidade, rapidez de execução em tempo real e reprodutibilidade integral.
+          </p>
+        </div>
+
+        <!-- SNIPPET 1: CLASSE GRAFOTUBULACAO -->
+        <h3 style="font-size:1.15rem; margin-top:28px;">1. Estrutura de Dados: Classe <code>GrafoTubulacao</code> (Aula 11)</h3>
+        <p style="font-size:0.88rem; color:var(--muted); margin-bottom:12px;">Representação por listas de adjacência e catálogos de arestas, com validação de consistência matemática:</p>
+        <pre class="code-block"><code><span class="keyword">class</span> <span class="function">GrafoTubulacao</span>:
+    <span class="keyword">def</span> <span class="function">__init__</span>(self, permite_reserva: <span class="keyword">bool</span> = <span class="keyword">False</span>):
+        self.vertices: set[str] = set()
+        self.adj: dict[str, list[tuple[str, str, float]]] = {}  <span class="comment"># u -> [(v, edge_id, peso)]</span>
+        self.arestas: dict[str, dict] = {}
+        self.bloqueios: set[str] = set()
+        self.permite_reserva = permite_reserva
+
+    <span class="keyword">def</span> <span class="function">adicionar_aresta</span>(self, id_: str, u: str, v: str, peso: float, diametro: float,
+                         valvula: str = <span class="keyword">None</span>, modos: list[str] = <span class="keyword">None</span>, reserva: <span class="keyword">bool</span> = <span class="keyword">False</span>):
+        <span class="keyword">if</span> id_ <span class="keyword">in</span> self.arestas:
+            <span class="keyword">raise</span> ValueError(<span class="string">f"ID duplicado: {id_}"</span>)
+        <span class="keyword">if</span> peso &lt;= <span class="number">0</span>:
+            <span class="keyword">raise</span> ValueError(<span class="string">f"Peso não-positivo na aresta {id_}"</span>)
+        
+        self.vertices.add(u)
+        self.vertices.add(v)
+        self.adj.setdefault(u, []).append((v, id_, peso))
+        self.adj.setdefault(v, [])
+        self.arestas[id_] = {
+            <span class="string">'u'</span>: u, <span class="string">'v'</span>: v, <span class="string">'peso'</span>: peso, <span class="string">'diametro'</span>: diametro,
+            <span class="string">'valvula'</span>: valvula, <span class="string">'modos'</span>: modos <span class="keyword">or</span> [], <span class="string">'reserva'</span>: reserva
+        }</code></pre>
+
+        <!-- SNIPPET 2: DIJKSTRA -->
+        <h3 style="font-size:1.15rem; margin-top:32px;">2. Algoritmo de Menor Caminho (Dijkstra) com Restrição de Modo (Aula 14)</h3>
+        <p style="font-size:0.88rem; color:var(--muted); margin-bottom:12px;">Implementação com fila de prioridades min-heap e recálculo dinâmico sob bloqueio:</p>
+        <pre class="code-block"><code><span class="keyword">import</span> heapq
+
+<span class="keyword">def</span> <span class="function">dijkstra</span>(grafo: GrafoTubulacao, origem: str, destino: str, modo: str = <span class="string">'voo'</span>):
+    distancias = {v: float(<span class="string">'inf'</span>) <span class="keyword">for</span> v <span class="keyword">in</span> grafo.vertices}
+    predecessores = {v: <span class="keyword">None</span> <span class="keyword">for</span> v <span class="keyword">in</span> grafo.vertices}
+    distancias[origem] = <span class="number">0.0</span>
+    pq = [(<span class="number">0.0</span>, origem)]
+
+    <span class="keyword">while</span> pq:
+        d_atual, u = heapq.heappop(pq)
+        <span class="keyword">if</span> d_atual &gt; distancias[u]:
+            <span class="keyword">continue</span>
+        <span class="keyword">if</span> u == destino:
+            <span class="keyword">break</span>
+
+        <span class="keyword">for</span> v, edge_id, peso <span class="keyword">in</span> grafo.adj.get(u, []):
+            aresta = grafo.arestas[edge_id]
+            <span class="comment"># Filtra trechos bloqueados ou fora do modo operacional</span>
+            <span class="keyword">if</span> edge_id <span class="keyword">in</span> grafo.bloqueios <span class="keyword">or</span> (modo <span class="keyword">and</span> modo <span class="keyword">not in</span> aresta[<span class="string">'modos'</span>]):
+                <span class="keyword">continue</span>
+            
+            nova_dist = d_atual + peso
+            <span class="keyword">if</span> nova_dist &lt; distancias[v]:
+                distancias[v] = nova_dist
+                predecessores[v] = (u, edge_id)
+                heapq.heappush(pq, (nova_dist, v))
+
+    <span class="keyword">return</span> distancias[destino], predecessores</code></pre>
+
+        <!-- SNIPPET 3: TSP E 2-OPT -->
+        <h3 style="font-size:1.15rem; margin-top:32px;">3. Caixeiro Viajante (TSP) com Refinamento 2-Opt (Aula 17)</h3>
+        <p style="font-size:0.88rem; color:var(--muted); margin-bottom:12px;">Heurística de troca de arestas para desatar cruzamentos no plano de voo agrícola:</p>
+        <pre class="code-block"><code><span class="keyword">def</span> <span class="function">two_opt</span>(rota_inicial: list[str], matriz_dist: dict):
+    melhor_rota = rota_inicial[:]
+    melhor_custo = calcular_custo_ciclo(melhor_rota, matriz_dist)
+    melhorou = <span class="keyword">True</span>
+
+    <span class="keyword">while</span> melhorou:
+        melhorou = <span class="keyword">False</span>
+        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>, len(melhor_rota) - <span class="number">2</span>):
+            <span class="keyword">for</span> k <span class="keyword">in</span> range(i + <span class="number">1</span>, len(melhor_rota) - <span class="number">1</span>):
+                <span class="comment"># Inverte o trecho entre i e k</span>
+                nova_rota = melhor_rota[:i] + melhor_rota[i:k+<span class="number">1</span>][::-<span class="number">1</span>] + melhor_rota[k+<span class="number">1</span>:]
+                novo_custo = calcular_custo_ciclo(nova_rota, matriz_dist)
+                <span class="keyword">if</span> novo_custo &lt; melhor_custo - <span class="number">1e-6</span>:
+                    melhor_rota = nova_rota
+                    melhor_custo = novo_custo
+                    melhorou = <span class="keyword">True</span>
+                    <span class="keyword">break</span>
+            <span class="keyword">if</span> melhorou:
+                <span class="keyword">break</span>
+    <span class="keyword">return</span> melhor_rota, melhor_custo  <span class="comment"># Atinge o ótimo global de 585.332 m</span></code></pre>
+      </section>
+
+      <!-- ============================================================
+           ABA 4: SIMULADOR DIDÁTICO INTERATIVO
+           ============================================================ -->
+      <section class="e02-panel" id="painel-simulador" role="tabpanel" aria-labelledby="tab-simulador" data-e02-panel="simulador">
+        <div class="section-head">
+          <span class="lesson-code">LABORATÓRIO INTERATIVO DE MODELOS</span>
+          <h2>Simulador de Grafos do AgroDrone</h2>
+          <p>
+            Explore os 6 modelos desenvolvidos pelo grupo com recálculo em tempo real no navegador. Cada vista possui dados, unidades e algoritmos próprios.
+          </p>
+        </div>
+
+        <div class="e02-method-note">
+          <strong>Nota Metodológica:</strong> Os controles recalculam as estruturas matemáticas em JavaScript/SVG diretamente no seu navegador, demonstrando o comportamento dos algoritmos sob diferentes condições e bloqueios de processo.
+        </div>
+
+        <!-- SIMULATOR WORKBENCH -->
+        <div class="e02-simulator" id="e02-sim-workbench" data-etapa02-simulator>
+          <!-- Modo Tabs -->
+          <div class="e02-mode-list" role="tablist" aria-label="Vistas do simulador">
+            <button class="e02-mode-btn active" type="button" role="tab" aria-selected="true" data-e02-mode="water">
+              Hidráulica <small>Dijkstra</small>
+            </button>
+            <button class="e02-mode-btn" type="button" role="tab" aria-selected="false" data-e02-mode="search">
+              Busca <small>BFS &amp; DFS</small>
+            </button>
+            <button class="e02-mode-btn" type="button" role="tab" aria-selected="false" data-e02-mode="leak">
+              Vazamento <small>Falha &amp; Intertravamento</small>
+            </button>
+            <button class="e02-mode-btn" type="button" role="tab" aria-selected="false" data-e02-mode="euler">
+              Inspeção Solo <small>Circuito Euler</small>
+            </button>
+            <button class="e02-mode-btn" type="button" role="tab" aria-selected="false" data-e02-mode="tsp">
+              Missão VANT <small>TSP 2-Opt &amp; AGM</small>
+            </button>
+            <button class="e02-mode-btn" type="button" role="tab" aria-selected="false" data-e02-mode="logistics">
+              Logística <small>Fluxo Insumos</small>
+            </button>
+          </div>
+
+          <!-- Cabeçalho da Vista Atual -->
+          <div class="e02-sim-head">
+            <div>
+              <p class="lesson-code" data-e02-mode-code>AULA 14 · DIJKSTRA</p>
+              <h3 data-e02-mode-title>Rede Hidráulica: Menor Caminho</h3>
+              <p data-e02-mode-description>Calcula o caminho de menor comprimento físico (metros) entre a origem selecionada e os bicos de pulverização.</p>
+            </div>
+            <span class="badge badge-outline" data-e02-mode-unit>metros · dirigido ponderado</span>
+          </div>
+
+          <!-- Grade Principal: Canvas SVG + Painel Lateral -->
+          <div class="e02-sim-grid">
+            <section class="e02-graph-panel" aria-label="Canvas do Grafo">
+              <div class="e02-graph-scroll">
+                <svg data-e02-graph viewBox="0 0 900 400" role="img" aria-label="Visualização em Grafo"></svg>
+              </div>
+              <div class="e02-graph-legend" data-e02-legend></div>
+            </section>
+
+            <aside class="e02-controls">
+              <!-- Seletor de parâmetros -->
+              <div data-e02-selection></div>
+
+              <!-- Lista de bloqueios -->
+              <fieldset>
+                <legend>Interdição de Trechos / Bloqueios</legend>
+                <div data-e02-blocks class="e02-block-list"></div>
+              </fieldset>
+
+              <!-- Botões de ação -->
+              <div class="e02-control-actions">
+                <button class="btn btn-sm btn-primary" type="button" data-e02-run>Recalcular</button>
+                <button class="btn btn-sm btn-outline" type="button" data-e02-reset>Restaurar Padrão</button>
+              </div>
+            </aside>
+          </div>
+
+          <!-- Rodapé com Resultados Numéricos -->
+          <footer class="e02-sim-results" data-e02-results></footer>
+        </div>
+      </section>
+
+      <!-- ============================================================
+           ABA 5: VALIDAÇÃO & ARQUIVOS
+           ============================================================ -->
+      <section class="e02-panel" id="painel-arquivos" role="tabpanel" aria-labelledby="tab-arquivos" data-e02-panel="arquivos">
+        <div class="section-head">
+          <span class="lesson-code">GARANTIA DE QUALIDADE &amp; AUDITORIA</span>
+          <h2>Resultados Obtidos &amp; Relatório de Validação</h2>
+          <p>
+            Todos os 8 notebooks foram executados em sequência limpa sob Python 3.12.14, validando 86 células de código e 67 asserções formais sem nenhuma falha ou aviso.
+          </p>
+        </div>
+
+        <!-- TABELA DE RESULTADOS DO RELATÓRIO -->
+        <div class="val-table-wrap">
+          <table class="val-table">
+            <thead>
+              <tr>
+                <th>Aula / Módulo</th>
+                <th>Tópico Central</th>
+                <th style="text-align:right;">Células</th>
+                <th style="text-align:right;">Asserções assert</th>
+                <th>Resultado Obtido</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Aula 11</strong></td>
+                <td>Modelagem de Tubulações como Grafo</td>
+                <td class="num">7</td>
+                <td class="num">7</td>
+                <td>Graus de entrada e saída = 11; integridade das tags ISA 5.1</td>
+                <td class="status">✓ PASSOU</td>
+              </tr>
+              <tr>
+                <td><strong>Aula 12</strong></td>
+                <td>Matrizes A, W, B e Balanço Volumétrico</td>
+                <td class="num">8</td>
+                <td class="num">8</td>
+                <td>Soma de colunas de B = 0; Posto 10 (básico) e 11 (reserva); resíduo 0.000 L</td>
+                <td class="status">✓ PASSOU</td>
+              </tr>
+              <tr>
+                <td><strong>Aula 13</strong></td>
+                <td>Algoritmos de Busca BFS e DFS</td>
+                <td class="num">11</td>
+                <td class="num">9</td>
+                <td>Árvore de menor salto até bicos; 2 caminhos independentes via DFS</td>
+                <td class="status">✓ PASSOU</td>
+              </tr>
+              <tr>
+                <td><strong>Aula 14</strong></td>
+                <td>Menor Caminho Dijkstra e Dinâmico</td>
+                <td class="num">12</td>
+                <td class="num">5</td>
+                <td>Rota principal 1.80 m vs reserva 2.20 m; 1440 pares comparados c/ Floyd-Warshall</td>
+                <td class="status">✓ PASSOU</td>
+              </tr>
+              <tr>
+                <td><strong>Aula 15</strong></td>
+                <td>Vazamentos e Desvio Automático</td>
+                <td class="num">16</td>
+                <td class="num">14</td>
+                <td>Detecção por telemetria; corte imediato da bomba; desvio com trava humana</td>
+                <td class="status">✓ PASSOU</td>
+              </tr>
+              <tr>
+                <td><strong>Aula 16</strong></td>
+                <td>Inspeção Euleriana de Infraestrutura</td>
+                <td class="num">5</td>
+                <td class="num">6</td>
+                <td>Todos vértices com grau par; circuito fechado de 9 arestas por Hierholzer</td>
+                <td class="status">✓ PASSOU</td>
+              </tr>
+              <tr>
+                <td><strong>Aula 17</strong></td>
+                <td>Caixeiro Viajante (TSP) no VANT</td>
+                <td class="num">13</td>
+                <td class="num">7</td>
+                <td>Vizinho Mais Próximo = 660.608 m; 2-Opt = 585.332 m (-11.4%); AGM = 375.304 m</td>
+                <td class="status">✓ PASSOU</td>
+              </tr>
+              <tr>
+                <td><strong>Aula 18</strong></td>
+                <td>Logística de Insumos e Produtos</td>
+                <td class="num">14</td>
+                <td class="num">11</td>
+                <td>Fluxo água = 210 m; produto = 206 m; apoio terrestre = 65 m; ordenação de Kahn</td>
+                <td class="status">✓ PASSOU</td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr style="background:var(--panel-2); font-weight:700;">
+                <td colspan="2">TOTAL ACUMULADO DA ETAPA 02</td>
+                <td class="num" style="color:var(--crop);">86 células</td>
+                <td class="num" style="color:var(--crop);">67 asserts</td>
+                <td colspan="2" style="color:var(--crop); font-family:var(--font-mono);">100% DE SUCESSO EM TODAS AS PROVAS</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- ACERVO DE ARQUIVOS MAPEADOS -->
+        <h3 style="font-size:1.25rem; margin-top:44px;">Acervo de Arquivos Mapeados (18 Itens)</h3>
+        <p style="font-size:0.9rem; color:var(--muted); margin-bottom:20px;">
+          Todos os arquivos estão organizados no repositório oficial do Grupo 06, seguindo a estrutura padrão de pastas da disciplina:
+        </p>
+
+        <div class="e02-files-grid">
+          <!-- CARD README -->
+          <div class="e02-file-card">
+            <div class="e02-file-card-header">
+              <h4>README.md</h4>
+              <span class="badge badge-outline">Guia Geral</span>
+            </div>
+            <p>Apresentação geral da etapa, instruções de reprodução dos notebooks, mapa das aulas e síntese dos resultados obtidos.</p>
+            <div class="e02-file-card-meta">
+              <span>etapa-02-grafos/</span>
+              <a href="https://github.com/marinazakimi/ECAA08--Grupo-06/blob/main/etapa-02-grafos/README.md" target="_blank" rel="noopener">Ver no GitHub ↗</a>
+            </div>
+          </div>
+
+          <!-- CARD AULA 11 -->
+          <div class="e02-file-card">
+            <div class="e02-file-card-header">
+              <h4>Aula 11 — Modelagem</h4>
+              <span class="badge badge-outline">A11 · .md + .ipynb</span>
+            </div>
+            <p>Dígrafo $G=(V,E,w)$ da rede de calda, lema dos graus, modos operacionais e classe <code>GrafoTubulacao</code>.</p>
+            <div class="e02-file-card-meta">
+              <span>7 asserts · Passou</span>
+              <a href="https://github.com/marinazakimi/ECAA08--Grupo-06/blob/main/etapa-02-grafos/11%20-%20Modelagem%20da%20Tubulacao%20e%20Instrumentos%20como%20Grafo.ipynb" target="_blank" rel="noopener">Abrir Notebook ↗</a>
+            </div>
+          </div>
+
+          <!-- CARD AULA 12 -->
+          <div class="e02-file-card">
+            <div class="e02-file-card-header">
+              <h4>Aula 12 — Matrizes</h4>
+              <span class="badge badge-outline">A12 · .md + .ipynb</span>
+            </div>
+            <p>Matrizes de adjacência, custos e incidência, verificação de postos (10 e 11) e conservação volumétrica de 2 L/min.</p>
+            <div class="e02-file-card-meta">
+              <span>8 asserts · Passou</span>
+              <a href="https://github.com/marinazakimi/ECAA08--Grupo-06/blob/main/etapa-02-grafos/12_Matrizes_de_Incidencia_Adjacencia_e_Custos.ipynb" target="_blank" rel="noopener">Abrir Notebook ↗</a>
+            </div>
+          </div>
+
+          <!-- CARD AULA 13 -->
+          <div class="e02-file-card">
+            <div class="e02-file-card-header">
+              <h4>Aula 13 — Busca BFS/DFS</h4>
+              <span class="badge badge-outline">A13 · .md + .ipynb</span>
+            </div>
+            <p>Árvores de alcance por largura (BFS) e rastreamento de caminhos redundantes por profundidade (DFS).</p>
+            <div class="e02-file-card-meta">
+              <span>9 asserts · Passou</span>
+              <a href="https://github.com/marinazakimi/ECAA08--Grupo-06/blob/main/etapa-02-grafos/13_Algoritmos_de_Busca_BFS_e_DFS_em_Tubulacoes.ipynb" target="_blank" rel="noopener">Abrir Notebook ↗</a>
+            </div>
+          </div>
+
+          <!-- CARD AULA 14 -->
+          <div class="e02-file-card">
+            <div class="e02-file-card-header">
+              <h4>Aula 14 — Dijkstra</h4>
+              <span class="badge badge-outline">A14 · .md + .ipynb</span>
+            </div>
+            <p>Menor caminho em metros na tubulação (1.80 m) e nos corredores aéreos, com 1440 pares comparados a Floyd-Warshall.</p>
+            <div class="e02-file-card-meta">
+              <span>5 asserts · Passou</span>
+              <a href="https://github.com/marinazakimi/ECAA08--Grupo-06/blob/main/etapa-02-grafos/14_Menor_Caminho_Dijkstra_e_Roteamento_Dinamico.ipynb" target="_blank" rel="noopener">Abrir Notebook ↗</a>
+            </div>
+          </div>
+
+          <!-- CARD AULA 15 -->
+          <div class="e02-file-card">
+            <div class="e02-file-card-header">
+              <h4>Aula 15 — Vazamento &amp; Desvio</h4>
+              <span class="badge badge-alarm">A15 · .md + .ipynb</span>
+            </div>
+            <p>Injeção de falha de vazamento, alarme SCADA por telemetria, corte da bomba e recálculo com desvio pelo Filtro 2.</p>
+            <div class="e02-file-card-meta">
+              <span>14 asserts · Passou</span>
+              <a href="https://github.com/marinazakimi/ECAA08--Grupo-06/blob/main/etapa-02-grafos/15_Simulacao_de_Vazamentos_e_Desvio_Automatico.ipynb" target="_blank" rel="noopener">Abrir Notebook ↗</a>
+            </div>
+          </div>
+
+          <!-- CARD AULA 16 -->
+          <div class="e02-file-card">
+            <div class="e02-file-card-header">
+              <h4>Aula 16 — Euler</h4>
+              <span class="badge badge-outline">A16 · .md + .ipynb</span>
+            </div>
+            <p>Inspeção física preventiva da base: multigrafo não dirigido de 6 locais e 9 vias com circuito fechado por Hierholzer.</p>
+            <div class="e02-file-card-meta">
+              <span>6 asserts · Passou</span>
+              <a href="https://github.com/marinazakimi/ECAA08--Grupo-06/blob/main/etapa-02-grafos/16_Problemas_Eulerianos_e_Inspecao_de_Infraestrutura.ipynb" target="_blank" rel="noopener">Abrir Notebook ↗</a>
+            </div>
+          </div>
+
+          <!-- CARD AULA 17 -->
+          <div class="e02-file-card">
+            <div class="e02-file-card-header">
+              <h4>Aula 17 — TSP VANT</h4>
+              <span class="badge badge-outline">A17 · .md + .ipynb</span>
+            </div>
+            <p>Caixeiro Viajante sobre os talhões: Nearest Neighbor (660.6 m) vs 2-Opt (585.3 m, ótimo exato) e AGM (375.3 m).</p>
+            <div class="e02-file-card-meta">
+              <span>7 asserts · Passou</span>
+              <a href="https://github.com/marinazakimi/ECAA08--Grupo-06/blob/main/etapa-02-grafos/17_Problemas_Hamiltonianos_e_Roteamento_de_AGV.ipynb" target="_blank" rel="noopener">Abrir Notebook ↗</a>
+            </div>
+          </div>
+
+          <!-- CARD AULA 18 -->
+          <div class="e02-file-card">
+            <div class="e02-file-card-header">
+              <h4>Aula 18 — Logística</h4>
+              <span class="badge badge-outline">A18 · .md + .ipynb</span>
+            </div>
+            <p>Rede de materiais e insumos (água 210 m e produto 206 m), precedência de preparo e apoio terrestre de 65 m.</p>
+            <div class="e02-file-card-meta">
+              <span>11 asserts · Passou</span>
+              <a href="https://github.com/marinazakimi/ECAA08--Grupo-06/blob/main/etapa-02-grafos/18_Grafos_de_Logistica_de_Insumos_e_Produtos_Acabados.ipynb" target="_blank" rel="noopener">Abrir Notebook ↗</a>
+            </div>
+          </div>
+
+          <!-- CARD APOIO -->
+          <div class="e02-file-card">
+            <div class="e02-file-card-header">
+              <h4>Arquivos de Apoio</h4>
+              <span class="badge badge-soil">Apoio &amp; Cadastros</span>
+            </div>
+            <p>Contém <code>Cadastro_Tubulacoes.csv</code>, layout funcional <code>aux_plantafabril.md</code>, análise de continuidade e diagramas em PNG.</p>
+            <div class="e02-file-card-meta">
+              <span>Arquivos_de_Apoio/</span>
+              <a href="https://github.com/marinazakimi/ECAA08--Grupo-06/tree/main/etapa-02-grafos/Arquivos_de_Apoio" target="_blank" rel="noopener">Explorar Pasta ↗</a>
+            </div>
+          </div>
+
+          <!-- CARD VALIDADOR -->
+          <div class="e02-file-card">
+            <div class="e02-file-card-header">
+              <h4>validar_notebooks.py</h4>
+              <span class="badge badge-outline">Script de Verificação</span>
+            </div>
+            <p>Utilitário autônomo em Python para execução e auditoria automática de todas as 86 células de código dos 8 notebooks.</p>
+            <div class="e02-file-card-meta">
+              <span>Python 3.10+</span>
+              <a href="https://github.com/marinazakimi/ECAA08--Grupo-06/blob/main/etapa-02-grafos/Arquivos_de_Apoio/validar_notebooks.py" target="_blank" rel="noopener">Ver Script ↗</a>
+            </div>
+          </div>
+
+          <!-- CARD RELATÓRIO -->
+          <div class="e02-file-card">
+            <div class="e02-file-card-header">
+              <h4>Relatório de Validação</h4>
+              <span class="badge badge-outline">Documentação</span>
+            </div>
+            <p>Relatório formal detalhando todas as 67 asserções, testes com grafos aleatórios e limites de conformidade da entrega.</p>
+            <div class="e02-file-card-meta">
+              <span>Relatorio_de_Validacao.md</span>
+              <a href="https://github.com/marinazakimi/ECAA08--Grupo-06/blob/main/etapa-02-grafos/Arquivos_de_Apoio/Relatorio_de_Validacao.md" target="_blank" rel="noopener">Ler Relatório ↗</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer style="margin-top:64px; border-top:1px solid var(--border); padding: 36px 0; background: var(--bg-alt);">
+  <div class="wrap" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;">
+    <div>
+      <p style="margin:0 0 4px; font-weight:600; color:var(--ink);">
+        ECAA08 — Arquitetura de Sistemas SCADA · Grupo 06
+      </p>
+      <p style="margin:0; font-size:0.85rem; color:var(--muted);">
+        Arthur, Caique, Luis Felipe, Marina · Universidade Federal de Itajubá (UNIFEI)
+      </p>
+    </div>
+    <div style="display:flex; gap:16px;">
+      <a href="index.html" style="font-family:var(--font-mono); font-size:0.85rem;">← Voltar para Etapa 01</a>
+      <a href="https://github.com/marinazakimi/ECAA08--Grupo-06" target="_blank" rel="noopener" style="font-family:var(--font-mono); font-size:0.85rem;">Repositório GitHub ↗</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Função auxiliar de troca de aba pelo menu superior
+  function switchTab(name) {
+    const btn = document.querySelector(`[data-e02-tab="${name}"]`);
+    btn?.click();
+  }
+
+  // Toggle do menu mobile
+  const navToggle = document.getElementById('navToggle');
+  const navLinks = document.getElementById('navLinks');
+  navToggle?.addEventListener('click', () => navLinks.classList.toggle('open'));
+  navLinks?.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+</script>
+
+</body>
+</html>
