@@ -1,0 +1,62 @@
+[
+  {
+    "numero": 19,
+    "stem": "19_Algoritmo_de_Kruskal_e_Prim",
+    "titulo": "Algoritmos de Kruskal e Prim",
+    "imagem": "19_Arvores_Geradoras.png"
+  },
+  {
+    "numero": 20,
+    "stem": "20_Codificacao_de_Huffman",
+    "titulo": "Codificação de Huffman",
+    "imagem": "20_Huffman_e_Pacotes.png"
+  },
+  {
+    "numero": 21,
+    "stem": "21_Arvores_Binarias",
+    "titulo": "Árvores binárias",
+    "imagem": "21_Arvores_do_Historico.png"
+  },
+  {
+    "numero": 22,
+    "stem": "22_Rapidly_exploring_Random_Trees",
+    "titulo": "Rapidly-exploring Random Trees — RRT",
+    "imagem": "22_Crescimento_RRT.png"
+  },
+  {
+    "numero": 23,
+    "stem": "23_Protocolo_de_Arvore_Geradora_STP_RSTP",
+    "titulo": "Protocolo de Árvore Geradora — STP / RSTP",
+    "imagem": "23_LAN_STP_RSTP.png"
+  },
+  {
+    "numero": 24,
+    "stem": "24_Arvore_de_Atingibilidade_e_Cobertura_em_Redes_de_Petri",
+    "titulo": "Árvore de atingibilidade e cobertura em Redes de Petri",
+    "imagem": "24_Arvore_Atingibilidade.png"
+  },
+  {
+    "numero": 25,
+    "stem": "25_Arvores_de_Comportamento",
+    "titulo": "Árvores de comportamento",
+    "imagem": "25_Prioridades_Comportamento.png"
+  },
+  {
+    "numero": 26,
+    "stem": "26_KD_Trees",
+    "titulo": "KD-Trees",
+    "imagem": "26_KD_Tree.png"
+  },
+  {
+    "numero": 27,
+    "stem": "27_Arvores_de_Decisao",
+    "titulo": "Árvores de decisão — algoritmos clássicos de construção",
+    "imagem": "27_Arvore_Aprendida.png"
+  },
+  {
+    "numero": 28,
+    "stem": "28_Apresentacao_e_Simulacao_do_Modulo_3",
+    "titulo": "Apresentação e simulação do módulo 3",
+    "imagem": "28_Painel_SCADA.png"
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "projeto": "Sistema SCADA aplicado a um Drone Agrícola de Pulverização",
+  "pontos_m": {"BASE": [0, 0], "T1": [200, 40], "T2": [170, 100], "T3": [30, 20], "T4": [60, 170], "T5": [130, 120]},
+  "limites_m": [-20, 240, -20, 210],
+  "obstaculos_m": [[75, 95, 0, 100], [110, 155, 145, 165]],
+  "raio_drone_m": 0.6,
+  "folga_m": 1.4,
+  "natureza": "Hipóteses geométricas didáticas; dimensões do drone real não especificadas. Os pontos de acesso são herdados da Aula 17."
+}

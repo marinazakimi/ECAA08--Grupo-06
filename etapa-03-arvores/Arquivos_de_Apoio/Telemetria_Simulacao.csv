@@ -1,0 +1,13 @@
+tick,descricao,acao,estado_petri,bomba,alarmes,sugestao_ml,ponto_proximo,pressao,vazao,bateria,nivel,vento,transicao
+0,Pré-missão: aguarda aprovação,AGUARDAR_OPERADOR,PRONTA,False,SEM_ALARME,NORMAL,BASE,3.0,2.0,80.0,70.0,3.0,—
+1,Aprovação e deslocamento,DESLOCAR,DESLOCANDO,False,SEM_ALARME,NORMAL,BASE,3.0,2.0,80.0,70.0,3.0,iniciar
+2,Entrada na faixa confirmada,PULVERIZAR,APLICANDO,True,SEM_ALARME,NORMAL,T1,3.0,2.0,80.0,70.0,3.0,chegar
+3,Vento acima do limite,PAUSAR,PAUSADA,False,VENTO_ALTO,VENTO_ALTO,T1,3.0,2.0,80.0,70.0,9.0,pausar
+4,Vento normalizado,PULVERIZAR,APLICANDO,True,SEM_ALARME,NORMAL,T1,3.0,2.0,80.0,70.0,3.0,retomar
+5,Indício de obstrução,PAUSAR,PAUSADA,False,FALHA_PULVERIZACAO; POSSIVEL_OBSTRUCAO; FALHA_RETIDA,OBSTRUCAO,T1,5.6,0.2,80.0,70.0,3.0,pausar
+6,Bomba parada; falha retida,PAUSAR,PAUSADA,False,FALHA_RETIDA,OBSTRUCAO,T1,3.0,0.0,80.0,70.0,3.0,—
+7,Inspeção e rearme confirmados,PULVERIZAR,APLICANDO,True,SEM_ALARME,NORMAL,T1,3.0,2.0,80.0,70.0,3.0,retomar
+8,Falha do enlace da LAN,PAUSAR_DADOS,PAUSADA,False,TELEMETRIA_INDISPONIVEL,INDISPONIVEL,T1,3.0,2.0,80.0,70.0,3.0,pausar
+9,Rede e telemetria recuperadas,PULVERIZAR,APLICANDO,True,SEM_ALARME,NORMAL,T1,3.0,2.0,80.0,70.0,3.0,retomar
+10,Bateria baixa: retorno solicitado,SOLICITAR_RETORNO,RETORNANDO,False,SEM_ALARME,BATERIA_BAIXA,T1,3.0,2.0,15.0,70.0,3.0,finalizar_faixas
+11,Pouso confirmado pelo simulador,CONCLUIR,CONCLUIDA,False,SEM_ALARME,BATERIA_BAIXA,BASE,3.0,2.0,15.0,70.0,3.0,pousar

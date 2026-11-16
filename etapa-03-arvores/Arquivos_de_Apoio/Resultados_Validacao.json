@@ -1,0 +1,153 @@
+{
+  "executado_em_utc": "2026-11-16T17:48:00.191647+00:00",
+  "python": "3.12.14",
+  "matplotlib": "3.10.8",
+  "nbformat": "5.11.1",
+  "metodo": "células sequenciais em processo Python novo por notebook; formato validado com nbformat",
+  "celulas_codigo": 56,
+  "aulas": {
+    "19": {
+      "celulas_codigo": 6,
+      "segundos": 2.569,
+      "status": "APROVADO",
+      "resumo": {
+        "custo_m": 386.85274970783917,
+        "vertices": 6,
+        "arestas_admissiveis": 9
+      }
+    },
+    "20": {
+      "celulas_codigo": 6,
+      "segundos": 0.82,
+      "status": "APROVADO",
+      "resumo": {
+        "eventos": 194,
+        "huffman_bytes": 74,
+        "fixo_bytes": 83,
+        "dicionario_bytes": 18
+      }
+    },
+    "21": {
+      "celulas_codigo": 5,
+      "segundos": 0.977,
+      "status": "APROVADO",
+      "resumo": {
+        "eventos": 194,
+        "altura_embaralhada": 13,
+        "altura_ordenada": 193
+      }
+    },
+    "22": {
+      "celulas_codigo": 5,
+      "segundos": 1.452,
+      "status": "APROVADO",
+      "resumo": {
+        "nos": 100,
+        "iteracoes": 150,
+        "comprimento_m": 383.4433377597177
+      }
+    },
+    "23": {
+      "celulas_codigo": 6,
+      "segundos": 0.726,
+      "status": "APROVADO",
+      "resumo": {
+        "raiz": "SW_SCADA",
+        "custo_stp": 20,
+        "custo_mst": 11
+      }
+    },
+    "24": {
+      "celulas_codigo": 6,
+      "segundos": 0.995,
+      "status": "APROVADO",
+      "resumo": {
+        "marcacoes": 6,
+        "arcos": 8,
+        "nos_cobertura_fila": 4,
+        "fila_ilimitada": true
+      }
+    },
+    "25": {
+      "celulas_codigo": 6,
+      "segundos": 0.77,
+      "status": "APROVADO",
+      "resumo": {
+        "bloqueios_testados": 11,
+        "retencao_e_rearme": "APROVADOS"
+      }
+    },
+    "26": {
+      "celulas_codigo": 5,
+      "segundos": 0.891,
+      "status": "APROVADO",
+      "resumo": {
+        "consultas": 100,
+        "pontos": 402,
+        "media_nos_visitados": 14.2
+      }
+    },
+    "27": {
+      "celulas_codigo": 6,
+      "segundos": 2.172,
+      "status": "APROVADO",
+      "resumo": {
+        "escolhido": {
+          "criterio": "gini",
+          "profundidade": 4
+        },
+        "acuracia": 1.0,
+        "macro_f1": 1.0,
+        "confusao": [
+          [
+            20,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            20,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            20,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            20,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            20
+          ]
+        ]
+      }
+    },
+    "28": {
+      "celulas_codigo": 5,
+      "segundos": 2.593,
+      "status": "APROVADO",
+      "resumo": {
+        "ticks": 12,
+        "eventos": 16,
+        "estado_final": "CONCLUIDA",
+        "pacote_huffman_bytes": 35,
+        "pacote_fixo_bytes": 16
+      }
+    }
+  }
+}
